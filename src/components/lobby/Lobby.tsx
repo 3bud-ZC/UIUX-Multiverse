@@ -187,7 +187,6 @@ export function Lobby() {
             </span>
             <span className={styles.legendSpec}>
               <b>Next.js · CSS Modules · canvas</b>
-              <b>No UI framework, no component library</b>
             </span>
           </>
         )}
