@@ -19,25 +19,49 @@ export function useReveal<T extends HTMLElement>() {
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    const targets = root.querySelectorAll<HTMLElement>("[data-reveal]");
 
-    if (reduced) {
-      for (const el of targets) el.dataset.in = "";
-      return;
-    }
-
-    const observer = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
           (entry.target as HTMLElement).dataset.in = "";
-          observer.unobserve(entry.target);
+          io.unobserve(entry.target);
         }
       },
       { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
     );
-    for (const el of targets) observer.observe(el);
-    return () => observer.disconnect();
+
+    function observe(targets: Iterable<Element>) {
+      for (const el of targets) {
+        if (reduced) {
+          (el as HTMLElement).dataset.in = "";
+        } else {
+          io.observe(el);
+        }
+      }
+    }
+
+    // Initial pass
+    observe(root.querySelectorAll("[data-reveal]:not([data-in])"));
+
+    // Catch anything mounted later
+    const mo = new MutationObserver((mutations) => {
+      for (const mut of mutations) {
+        for (const node of mut.addedNodes) {
+          if (node.nodeType !== Node.ELEMENT_NODE) continue;
+          const el = node as HTMLElement;
+          if (el.matches("[data-reveal]:not([data-in])")) observe([el]);
+          observe(el.querySelectorAll("[data-reveal]:not([data-in])"));
+        }
+      }
+    });
+
+    mo.observe(root, { childList: true, subtree: true });
+
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
   }, [reduced]);
 
   return ref;
