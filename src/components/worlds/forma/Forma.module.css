@@ -169,8 +169,8 @@
 
 .works {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(1rem, 2vw, 2.5rem);
   padding: clamp(2rem, 6vh, 4rem) var(--pad);
   border-bottom: 1px solid var(--rule);
   align-items: start;
@@ -190,12 +190,12 @@
   margin-top: 1.25rem;
   border-collapse: collapse;
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: 0.65rem;
 }
 
 .index th,
 .index td {
-  padding: 0.5rem 0.6rem 0.5rem 0;
+  padding: 0.4rem 0.5rem 0.4rem 0;
   text-align: left;
   font-weight: 400;
   border-bottom: 1px solid var(--rule);
@@ -203,7 +203,7 @@
 }
 
 .index thead th {
-  font-size: 0.5625rem;
+  font-size: 0.5rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--dim);
@@ -231,7 +231,7 @@
 
 .indexName {
   font-family: var(--serif);
-  font-size: 1rem;
+  font-size: 0.85rem;
 }
 
 /* ── Plate ──────────────────────────────────────────────────────────────── */
