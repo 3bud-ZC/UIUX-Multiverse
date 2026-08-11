@@ -372,10 +372,10 @@ export const WORLDS: readonly World[] = [
     product: "أثير — أرشيف الإذاعة والطرب القديم",
     concept: "A retro Arabic radio: turn the dial, land on a decade, listen.",
     signature: "Turning the dial changes the decade — sound, light and all.",
-    luminance: "light",
+    luminance: "dark",
     palette: {
-      base: "#e5d3a3",
-      ink: "#241a10",
+      base: "#241a10",
+      ink: "#e5d3a3",
       dim: "#5c4728",
       line: "#c6ae78",
       accent: "#a8321c",

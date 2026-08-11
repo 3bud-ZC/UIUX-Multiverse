@@ -23,9 +23,7 @@
 
   position: relative;
   min-height: 100dvh;
-  background:
-    radial-gradient(120vmax 80vmax at 50% -20%, rgba(255, 240, 200, 0.55), transparent 60%),
-    linear-gradient(180deg, #eddfb6 0%, var(--base) 40%, #dcc793 100%);
+  background-color: var(--base);
   color: var(--ink);
   font-family: var(--font-tajawal), sans-serif;
   font-size: 1.0625rem;
@@ -36,6 +34,8 @@
 /* ── Head ───────────────────────────────────────────────────────────────── */
 
 .head {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: baseline;
@@ -78,6 +78,8 @@
 /* ── The set ────────────────────────────────────────────────────────────── */
 
 .setSection {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   align-items: center;

@@ -37,9 +37,9 @@ export function RadioWavesCanvas({ className }: { className?: string }) {
 
       // We'll draw a few gentle sine waves
       const waves = [
-        { amplitude: h * 0.1, frequency: 0.001, speed: 1.5, opacity: 0.15 },
-        { amplitude: h * 0.15, frequency: 0.0008, speed: 1, opacity: 0.1 },
-        { amplitude: h * 0.08, frequency: 0.002, speed: 2, opacity: 0.12 },
+        { amplitude: h * 0.1, frequency: 0.001, speed: 1.5, opacity: 0.35 },
+        { amplitude: h * 0.15, frequency: 0.0008, speed: 1, opacity: 0.25 },
+        { amplitude: h * 0.08, frequency: 0.002, speed: 2, opacity: 0.3 },
       ];
 
       waves.forEach((wave, i) => {
@@ -90,7 +90,6 @@ export function RadioWavesCanvas({ className }: { className?: string }) {
         width: "100vw",
         height: "100vh",
         pointerEvents: "none",
-        zIndex: -1, // Keep it behind everything
       }}
       aria-hidden="true"
     />
