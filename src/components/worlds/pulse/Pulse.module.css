@@ -675,6 +675,10 @@
   --c-ink: #241708;
 }
 
+.page[data-house="archive"] .stageText {
+  margin-inline-start: 0;
+}
+
 .page[data-house="archive"] .sleeve figcaption,
 .page[data-house="archive"] .specs dt,
 .page[data-house="archive"] .specs dd {
@@ -1721,6 +1725,7 @@ li[data-shape="stack"] .listShape {
   text-transform: uppercase;
   color: var(--dim);
   text-align: end;
+  min-width: 0;
 }
 
 .dockQueue b {
