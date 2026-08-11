@@ -229,9 +229,15 @@
 }
 
 @keyframes swap {
-  from {
+  0% {
     opacity: 0;
-    transform: translateY(10px) scale(0.985);
+    transform: translateY(15px) scale(0.97);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0px);
   }
 }
 
@@ -309,12 +315,17 @@
   gap: 0.1rem;
   padding: 0.7rem 0.85rem;
   border-radius: var(--r);
-  background: var(--cream);
+  background: rgba(253, 241, 234, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 20px -2px rgba(91, 61, 245, 0.05);
 }
 
 .card[data-tone="do"] {
-  background: linear-gradient(120deg, #efe9ff, #ffe7dc);
-  box-shadow: inset 0 0 0 1.5px #d8ccff;
+  background: linear-gradient(120deg, rgba(239, 233, 255, 0.55), rgba(255, 231, 220, 0.55));
+  box-shadow: inset 0 0 0 1.5px rgba(216, 204, 255, 0.8), 0 4px 20px -2px rgba(91, 61, 245, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .cardTime {
@@ -381,7 +392,10 @@
 .stats div {
   padding: 0.55rem 0.6rem;
   border-radius: 0.9rem;
-  background: var(--cream);
+  background: rgba(253, 241, 234, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .stats dt {
@@ -431,7 +445,11 @@
   margin-top: 1.25rem;
   padding: 0.85rem;
   border-radius: var(--r);
-  background: var(--cream);
+  background: rgba(253, 241, 234, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 20px -2px rgba(91, 61, 245, 0.05);
 }
 
 .sliderHead {
@@ -707,21 +725,36 @@
 
 .rules {
   display: grid;
-  gap: 0.9rem;
-  margin-top: 1.25rem;
-  max-width: 56ch;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+  max-width: 60ch;
 }
 
 .rules li {
-  padding-left: 1.1rem;
-  border-left: 2px solid var(--indigo);
+  padding: 1.25rem;
+  border-radius: var(--r);
+  background: rgba(253, 241, 234, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 20px -2px rgba(91, 61, 245, 0.05);
   font-size: 0.9375rem;
   color: var(--dim);
+  transition: transform var(--spring), box-shadow var(--spring);
+}
+
+.rules li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px -5px rgba(91, 61, 245, 0.15);
 }
 
 .rules b {
+  display: block;
   font-family: var(--display);
-  color: var(--ink);
+  font-size: 1.125rem;
+  color: var(--indigo);
+  margin-bottom: 0.4rem;
 }
 
 /* ── States ─────────────────────────────────────────────────────────────── */
@@ -741,11 +774,21 @@
   border: 1px solid var(--line);
   min-height: 12rem;
   align-content: start;
+  transition: transform var(--spring), box-shadow var(--spring);
+}
+
+.stateCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px -10px rgba(91, 61, 245, 0.15);
 }
 
 .stateCard[data-kind="error"] {
   border-color: #f0c3b2;
   background: linear-gradient(160deg, #fff4ef, var(--white));
+}
+
+.stateCard[data-kind="error"]:hover {
+  box-shadow: 0 15px 35px -10px rgba(226, 101, 58, 0.15);
 }
 
 .stateTitle {
@@ -783,6 +826,7 @@
   height: 8px;
   border-radius: 999px;
   background: var(--cream2);
+  overflow: hidden;
 }
 
 .stateBar i {
@@ -790,6 +834,25 @@
   height: 100%;
   border-radius: 999px;
   background: var(--indigo);
+  position: relative;
+  overflow: hidden;
+}
+
+.stateBar i::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: pulseBar 2s infinite;
+}
+
+@keyframes pulseBar {
+  100% {
+    left: 100%;
+  }
 }
 
 .stateLabel {
@@ -915,6 +978,40 @@
 
 .heroPhone {
   perspective: 1400px;
+  position: relative;
+}
+
+/* Ambient glowing orb behind the phone */
+.heroPhone::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--indigo) 30%, transparent), transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+  animation: bloom 1150ms cubic-bezier(0.22, 1.2, 0.36, 1) 180ms both, pulseOrb 8s ease-in-out infinite alternate;
+}
+
+@keyframes bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(-20vh);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pulseOrb {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.1) rotate(15deg) translateY(-5%);
+    opacity: 1;
+  }
 }
 
 .heroPhone .phone {
@@ -930,10 +1027,12 @@
   62% {
     opacity: 1;
     transform: translateY(1.25rem) rotateX(-4deg) rotateZ(1.5deg) scale(1.015);
+    box-shadow: 0 50px 100px -30px rgb(91 61 245 / 0.4), 0 2px 0 rgb(255 255 255 / 0.6) inset;
   }
   100% {
     opacity: 1;
     transform: none;
+    box-shadow: 0 40px 80px -30px rgb(91 61 245 / 0.35), 0 2px 0 rgb(255 255 255 / 0.6) inset;
   }
 }
 
@@ -1103,12 +1202,15 @@
 .cityChip:hover,
 .cityLocate:hover {
   border-color: var(--indigo);
+  background: color-mix(in srgb, var(--indigo) 8%, transparent);
+  box-shadow: 0 4px 15px -4px color-mix(in srgb, var(--indigo) 20%, transparent);
 }
 
 .cityChip[data-on] {
   border-color: var(--indigo);
   background: color-mix(in srgb, var(--indigo) 12%, transparent);
   color: var(--indigo);
+  box-shadow: inset 0 0 0 1px var(--indigo), 0 4px 15px -4px color-mix(in srgb, var(--indigo) 30%, transparent);
 }
 
 .cityLocate {
@@ -1132,10 +1234,14 @@
   width: clamp(8rem, 16vw, 10.5rem);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 34%, #fff, var(--cream) 74%);
+  background: radial-gradient(circle at 50% 34%, rgba(255, 255, 255, 0.9), rgba(253, 241, 234, 0.6) 74%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow:
-    inset 0 0 0 1px var(--line),
-    0 1rem 2rem -1rem rgb(36 26 46 / 0.28);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+    inset 0 2px 10px rgba(255, 255, 255, 0.5),
+    0 1rem 2.5rem -0.5rem rgb(36 26 46 / 0.28),
+    0 0 30px rgba(91, 61, 245, 0.1);
   cursor: grab;
   touch-action: none;
   text-align: center;
@@ -1167,11 +1273,12 @@
 .dialHand {
   position: absolute;
   inset: 6% auto auto 50%;
-  width: 3px;
+  width: 4px;
   height: 26%;
-  margin-inline-start: -1.5px;
-  border-radius: 2px;
+  margin-inline-start: -2px;
+  border-radius: 4px;
   background: var(--indigo);
+  box-shadow: 0 0 12px 2px var(--indigo), 0 0 4px var(--white);
   transform-origin: 50% 168%;
   transform: rotate(var(--turn, 0deg));
   transition: transform 220ms var(--spring);
@@ -1230,7 +1337,8 @@
 .confirmFill {
   position: absolute;
   inset: 0 auto 0 0;
-  background: color-mix(in srgb, var(--indigo) 70%, transparent);
+  background: color-mix(in srgb, var(--indigo) 80%, transparent);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--indigo) 40%, transparent);
 }
 
 .confirmKnob {
@@ -1244,6 +1352,12 @@
   font-size: 1.1rem;
   box-shadow: 0 0.3rem 0.7rem -0.3rem rgb(36 26 46 / 0.4);
   cursor: grab;
+  animation: pulseKnob 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulseKnob {
+  0% { box-shadow: 0 0 0 0px color-mix(in srgb, var(--indigo) 30%, transparent), 0 0.3rem 0.7rem -0.3rem rgb(36 26 46 / 0.4); }
+  100% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--indigo) 0%, transparent), 0 0.3rem 0.7rem -0.3rem rgb(36 26 46 / 0.4); }
 }
 
 .confirmKnob:active {
