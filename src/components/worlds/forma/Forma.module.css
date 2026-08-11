@@ -195,7 +195,7 @@
 
 .index th,
 .index td {
-  padding: 0.4rem 0.5rem 0.4rem 0;
+  padding: 0.4rem 0.5rem 0.4rem 0.75rem;
   text-align: left;
   font-weight: 400;
   border-bottom: 1px solid var(--rule);
