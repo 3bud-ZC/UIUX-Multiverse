@@ -374,7 +374,7 @@ export const WORLDS: readonly World[] = [
     signature: "Turning the dial changes the decade — sound, light and all.",
     luminance: "dark",
     palette: {
-      base: "#241a10",
+      base: "#1a1614",
       ink: "#e5d3a3",
       dim: "#5c4728",
       line: "#c6ae78",

@@ -37,9 +37,9 @@ export function RadioWavesCanvas({ className }: { className?: string }) {
 
       // We'll draw a few gentle sine waves
       const waves = [
-        { amplitude: h * 0.1, frequency: 0.001, speed: 1.5, opacity: 0.35 },
-        { amplitude: h * 0.15, frequency: 0.0008, speed: 1, opacity: 0.25 },
-        { amplitude: h * 0.08, frequency: 0.002, speed: 2, opacity: 0.3 },
+        { amplitude: h * 0.1, frequency: 0.001, speed: 1.5, opacity: 0.65 },
+        { amplitude: h * 0.15, frequency: 0.0008, speed: 1, opacity: 0.5 },
+        { amplitude: h * 0.08, frequency: 0.002, speed: 2, opacity: 0.6 },
       ];
 
       waves.forEach((wave, i) => {
@@ -63,8 +63,8 @@ export function RadioWavesCanvas({ className }: { className?: string }) {
 
         // Stroke style: soft amber/gold color typical of classic radios
         // We use the CSS variable --glow if possible, or fallback
-        ctx.strokeStyle = `rgba(200, 150, 80, ${wave.opacity})`;
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = `rgba(210, 160, 90, ${wave.opacity})`;
+        ctx.lineWidth = 3;
         ctx.stroke();
       });
 
