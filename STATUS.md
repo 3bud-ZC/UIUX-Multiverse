@@ -431,3 +431,15 @@ cover system plus the sequencer.
    garment, accessory and plate differ per artist, but the eye and mouth positions
    are fixed by the system, so the eight faces are a family rather than eight
    individuals.
+
+## Deployment
+
+- **Production URL**: https://uiux.abud.fun
+- **GitHub Commit SHA**: b0915d63810011828821224c48fba94b4df39f36
+- **VPS IP**: 167.99.157.6
+- **Deployment Path**: /var/www/uiux-multiverse/releases/20260811061908 (symlinked to /var/www/uiux-multiverse/current)
+- **PM2**: App name \uiux-multiverse\ running NextJS node server on port 3077
+- **Nginx Config Path**: /etc/nginx/sites-available/uiux.abud.fun.conf (symlinked to sites-enabled)
+- **HTTPS Status**: SSL enabled with Certbot/Let's Encrypt
+- **Health-check**: Success. App serving requests securely.
+- **Rollback Command**: ssh root@167.99.157.6 'ln -sfn /var/www/uiux-multiverse/releases/<PREVIOUS_TIMESTAMP> /var/www/uiux-multiverse/current && cd /var/www/uiux-multiverse/current && pm2 restart uiux-multiverse'
