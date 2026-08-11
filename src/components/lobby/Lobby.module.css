@@ -164,10 +164,49 @@
 .top {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 1.5rem;
   padding-inline: 0.25rem;
+}
+
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  justify-self: center;
+}
+
+.socialIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dim);
+  transition: color 0.3s ease;
+}
+
+.lobby[data-held] .socialIcon {
+  color: var(--w-dim);
+}
+
+.socialIcon:hover {
+  color: var(--ink);
+}
+
+.lobby[data-held] .socialIcon:hover {
+  color: var(--w-ink);
+}
+
+.socialIcon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.socialA {
+  font-family: var(--font-sans-stack);
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 /* Both headlines occupy the same cell and cross-fade. The cell is given a
@@ -617,7 +656,12 @@
 
   .top {
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.35rem;
+    gap: 0.75rem;
+  }
+
+  .socials {
+    justify-self: start;
+    padding-block: 0.25rem;
   }
 
   .claims {
