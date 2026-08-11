@@ -63,6 +63,11 @@ export function Forma() {
 
   return (
     <div className={styles.sheet}>
+      <FieldCanvas
+        kind="axonometric"
+        colors={{ ...WORLD.palette, raise: "#b9b7af" }}
+        className={styles.field}
+      />
       <header className={styles.titleBlock}>
         <div className={styles.tbName}>
           <p className={styles.studio}>Forma</p>
@@ -94,11 +99,6 @@ export function Forma() {
       </header>
 
       <section className={styles.opening} aria-labelledby="opening-h">
-        <FieldCanvas
-          kind="axonometric"
-          colors={{ ...WORLD.palette, raise: "#b9b7af" }}
-          className={styles.field}
-        />
         <div className={styles.openingType}>
           <p className={styles.marginNote}>
             Est. 2016 · 14 built · 3 on site

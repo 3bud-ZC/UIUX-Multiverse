@@ -118,16 +118,16 @@
   align-items: end;
   padding: clamp(2rem, 7vh, 5rem) var(--pad);
   border-bottom: 1px solid var(--rule);
-  overflow: hidden;
 }
 
 .field {
-  position: absolute;
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   opacity: 0.42;
   pointer-events: none;
+  z-index: 0;
 }
 
 .openingType {
