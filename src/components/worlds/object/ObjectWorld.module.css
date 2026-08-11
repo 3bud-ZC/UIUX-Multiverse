@@ -817,23 +817,23 @@
 .finishChip {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.6rem 0.3rem 0.35rem;
-  border: 1px solid var(--knob-edge);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.22);
-  color: var(--plate-face);
-  font-size: 0.8125rem;
-  transition: border-color 300ms var(--mech), background-color 300ms var(--mech);
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  transition: border-color 300ms var(--mech);
 }
 
 .finishChip:hover {
-  background: rgba(0, 0, 0, 0.34);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .finishChip[data-on] {
   border-color: var(--glow);
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .finishSwatch {
@@ -845,7 +845,7 @@
 }
 
 .finishName {
-  font-family: var(--font-tajawal), sans-serif;
+  display: none;
 }
 
 .finishNote {

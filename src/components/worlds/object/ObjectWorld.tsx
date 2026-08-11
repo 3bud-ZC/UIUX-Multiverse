@@ -15,6 +15,7 @@ import { useWorldGround } from "@/lib/hooks/useWorldGround";
 import { getWorld } from "@/lib/worlds";
 import { FINISHES, PLATE, STATIONS } from "./data";
 import { useRadio } from "./useRadio";
+import { RadioWavesCanvas } from "./RadioWavesCanvas";
 import styles from "./ObjectWorld.module.css";
 
 const WORLD = getWorld("object");
@@ -56,7 +57,7 @@ export function ObjectWorld() {
   useRadio({
     on,
     volume,
-    music: station.music,
+    audioUrl: station.audioUrl,
     tuning,
     position: index / (STATIONS.length - 1),
   });
@@ -205,6 +206,8 @@ export function ObjectWorld() {
       data-tuning={tuning ? "" : undefined}
       data-finish={finish.id}
     >
+      <RadioWavesCanvas />
+
       <header className={styles.head}>
         <p className={styles.brand}>أثير</p>
         <p className={styles.sub}>أرشيف الإذاعة والطرب القديم</p>
@@ -292,6 +295,10 @@ export function ObjectWorld() {
                 aria-valuenow={index}
                 aria-valuetext={`${station.khz} — ${station.name}`}
                 onKeyDown={onKnobKey}
+                onWheel={(event) => {
+                  if (event.deltaY > 0) tuneTo(index - 1);
+                  else if (event.deltaY < 0) tuneTo(index + 1);
+                }}
                 onPointerDown={(event) => {
                   setDragging(true);
                   knobRef.current?.focus();
@@ -329,6 +336,10 @@ export function ObjectWorld() {
                     event.preventDefault();
                     setVolume((v) => Math.max(0, v - 0.08));
                   }
+                }}
+                onWheel={(event) => {
+                  if (event.deltaY > 0) setVolume((v) => Math.max(0, v - 0.04));
+                  else if (event.deltaY < 0) setVolume((v) => Math.min(1, v + 0.04));
                 }}
                 onPointerDown={(event) => {
                   setVolDragging(true);

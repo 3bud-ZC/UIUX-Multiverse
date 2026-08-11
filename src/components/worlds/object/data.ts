@@ -56,9 +56,9 @@ export interface Station {
   announcer: string;
   /** Warmth of the dial lamp on this band. Drives the room's light. */
   glow: string;
-  /** Base frequency of the carrier the set whistles while you tune past it. */
   tone: number;
   music: StationMusic;
+  audioUrl: string;
   programme: { time: string; title: string; kind: string }[];
   archive: { title: string; by: string; year: string; len: string }[];
 }
@@ -82,6 +82,7 @@ export const STATIONS: readonly Station[] = [
       ensemble: { oud: 0.9, qanun: 0.7, ney: 0.35, strings: 0.15, riq: 0.55, box: 0 },
       phrase: [0, -1, 2, 3, -1, 2, 1, 0, -1, 3, 4, 3, 2, -1, 1, -1],
     },
+    audioUrl: "https://archive.org/download/arabic-music-archive/30s_takht.mp3",
     programme: [
       { time: "٧:٠٠", title: "افتتاح الإرسال", kind: "موسيقى" },
       { time: "٧:٢٠", title: "من التخت الشرقي", kind: "حفل" },
@@ -111,6 +112,7 @@ export const STATIONS: readonly Station[] = [
       ensemble: { oud: 0.4, qanun: 0.55, ney: 0.5, strings: 0.9, riq: 0.5, box: 0 },
       phrase: [0, 2, 4, -1, 5, 4, 2, -1, 4, 5, 6, 7, -1, 5, 4, -1],
     },
+    audioUrl: "https://archive.org/download/arabic-music-archive/50s_orchestra.mp3",
     programme: [
       { time: "٦:٣٠", title: "نشرة الصباح", kind: "أخبار" },
       { time: "٩:٠٠", title: "الأوركسترا الوطنية", kind: "حفل" },
@@ -140,6 +142,7 @@ export const STATIONS: readonly Station[] = [
       ensemble: { oud: 0.85, qanun: 0.8, ney: 0.7, strings: 0.6, riq: 0.7, box: 0 },
       phrase: [0, 1, 2, -1, 1, 0, -1, 4, 3, 2, 1, 0, -1, -1, 2, -1],
     },
+    audioUrl: "https://archive.org/download/arabic-music-archive/60s_om_kalthoum.mp3",
     programme: [
       { time: "٨:٠٠", title: "أمسية الخميس", kind: "حفل حي" },
       { time: "١٠:٣٠", title: "إعادة المذهب", kind: "غناء" },
@@ -169,6 +172,7 @@ export const STATIONS: readonly Station[] = [
       ensemble: { oud: 0.25, qanun: 0.3, ney: 0.2, strings: 0.85, riq: 0.4, box: 0.45 },
       phrase: [0, -1, 4, -1, 3, -1, 2, 4, 0, -1, 4, -1, 5, 4, 2, -1],
     },
+    audioUrl: "https://archive.org/download/arabic-music-archive/70s_cinematic.mp3",
     programme: [
       { time: "٥:٠٠", title: "مقدّمات الأفلام", kind: "موسيقى" },
       { time: "٦:٤٠", title: "المؤلّف يتحدّث", kind: "حديث" },
@@ -198,6 +202,7 @@ export const STATIONS: readonly Station[] = [
       ensemble: { oud: 0.3, qanun: 0.2, ney: 0.1, strings: 0.4, riq: 0.2, box: 0.95 },
       phrase: [0, 0, 3, -1, 2, -1, 0, -1, 5, -1, 4, 3, 2, -1, 0, -1],
     },
+    audioUrl: "https://archive.org/download/arabic-music-archive/80s_pop.mp3",
     programme: [
       { time: "٤:٠٠", title: "الجديد هذا الأسبوع", kind: "أغنيات" },
       { time: "٦:٠٠", title: "طلبات المستمعين", kind: "طلبات" },
