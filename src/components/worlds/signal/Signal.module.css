@@ -1,0 +1,1533 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   08 · شَرارة — an Arabic learning game for children, published as a comic.
+
+   The grammar is ink: every shape is outlined in the same near-black, every
+   raised thing casts a hard offset shadow with no blur, and the ground carries
+   a halftone. Panels sit at angles to each other because a comic page is
+   pasted up, not laid out on a baseline grid.
+
+   Arabic is never letter-spaced here either — the display face does the
+   shouting, not the tracking.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.world {
+  --base: #25d0c4;
+  --ink: #06231f;
+  --dim: #0a4a44;
+  --line: #5ce0d6;
+  --hot: #ff4f74;
+  --sun: #ffd23f;
+
+  --pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ink-w: 3px;
+  --drop: 6px 6px 0 var(--ink);
+
+  position: relative;
+  min-height: 100dvh;
+  background-color: var(--base);
+  background-image: radial-gradient(circle, rgba(6, 35, 31, 0.11) 1.3px, transparent 1.4px);
+  background-size: 13px 13px;
+  color: var(--ink);
+  font-family: var(--font-marhey), sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  overflow-x: clip;
+  transition: background-color 620ms var(--pop);
+}
+
+.world[data-motif="numbers"] {
+  background-color: #4fd8b0;
+}
+.world[data-motif="space"] {
+  background-color: #7ec8e8;
+}
+.world[data-motif="sea"] {
+  background-color: #35c3dc;
+}
+
+/* ── Bar ────────────────────────────────────────────────────────────────── */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  flex-wrap: wrap;
+  padding: 0.85rem clamp(1rem, 4vw, 3rem);
+  background: var(--base);
+  border-block-end: var(--ink-w) solid var(--ink);
+  transition: background-color 620ms var(--pop);
+}
+
+.world[data-motif="numbers"] .bar {
+  background: #4fd8b0;
+}
+.world[data-motif="space"] .bar {
+  background: #7ec8e8;
+}
+.world[data-motif="sea"] .bar {
+  background: #35c3dc;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.sparkGlyph {
+  fill: var(--sun);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.6rem, 1.8vw, 1.5rem);
+  margin-inline-start: auto;
+  font-size: 1rem;
+}
+
+.nav a {
+  padding: 0.2rem 0.1rem;
+  border-block-end: 3px solid transparent;
+  transition: border-color 260ms var(--pop), color 260ms var(--pop);
+}
+
+.nav a:hover,
+.nav a:focus-visible {
+  border-block-end-color: var(--hot);
+}
+
+.getBtn {
+  padding: 0.5rem 1.1rem;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.0625rem;
+  background: var(--sun);
+  border: var(--ink-w) solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 220ms var(--pop), box-shadow 220ms var(--pop);
+}
+
+.getBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  padding: clamp(2rem, 6vh, 4.5rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 8vh, 6rem);
+}
+
+.kicker {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--ink);
+  color: var(--base);
+  font-size: 0.9375rem;
+}
+
+.title {
+  margin-block: 0.6rem 0.9rem;
+  font-family: var(--font-lalezar), sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.75rem, 8vw, 6rem);
+  line-height: 1.22;
+}
+
+/* The one word the whole page is about, stuck on at an angle. */
+.titleHot {
+  display: inline-block;
+  margin-inline-start: 0.3em;
+  padding: 0 0.28em;
+  background: var(--hot);
+  border: var(--ink-w) solid var(--ink);
+  box-shadow: var(--drop);
+  transform: rotate(-2.5deg);
+}
+
+.lede {
+  max-width: 40ch;
+  font-size: clamp(1rem, 1.5vw, 1.1875rem);
+  color: var(--ink);
+}
+
+.cta {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-block-start: 1.5rem;
+}
+
+.primary,
+.secondary {
+  padding: 0.7rem 1.6rem;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.1875rem;
+  border: var(--ink-w) solid var(--ink);
+  box-shadow: var(--drop);
+  transition: transform 220ms var(--pop), box-shadow 220ms var(--pop);
+}
+
+.primary {
+  background: var(--hot);
+  color: var(--ink);
+}
+
+.secondary {
+  background: #fff;
+  color: var(--ink);
+}
+
+.primary:hover,
+.secondary:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--ink);
+}
+
+.primary:active,
+.secondary:active {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.trust {
+  margin-block-start: 1rem;
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+/* ── The stage: mascot, phone, shout ────────────────────────────────────── */
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(22rem, 52vh, 34rem);
+}
+
+/* She stands in front of the device and leans over its top-left corner, so the
+   screen stays readable and she still reads as coming *out* of it. */
+.mascot {
+  position: absolute;
+  z-index: 3;
+  width: clamp(6.5rem, 13vw, 10rem);
+  inset-block-start: 1%;
+  inset-inline-end: 6%;
+  animation: bob 2600ms var(--pop) infinite alternate;
+}
+
+@keyframes bob {
+  from {
+    transform: translateY(0) rotate(-3deg);
+  }
+  to {
+    transform: translateY(-14px) rotate(3deg);
+  }
+}
+
+.shadow {
+  position: absolute;
+  inset-block-end: clamp(0.5rem, 2vw, 1.5rem);
+  width: clamp(11rem, 22vw, 17rem);
+  height: 1.15rem;
+  background: rgba(6, 35, 31, 0.22);
+  border-radius: 50%;
+}
+
+.burst {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 6%;
+  inset-inline-end: 2%;
+  display: grid;
+  place-items: center;
+  width: clamp(6.5rem, 13vw, 10rem);
+  aspect-ratio: 200 / 140;
+  animation: pow 900ms var(--pop) both;
+  pointer-events: none;
+}
+
+.burst svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.burst svg path {
+  fill: var(--sun);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.burst b {
+  position: relative;
+  font-family: var(--font-lalezar), sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2.1vw, 1.6rem);
+  line-height: 1;
+  color: var(--ink);
+}
+
+@keyframes pow {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-25deg);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.16) rotate(6deg);
+  }
+  72% {
+    opacity: 1;
+    transform: scale(1) rotate(-2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05) rotate(0deg);
+  }
+}
+
+/* ── The phone ──────────────────────────────────────────────────────────── */
+
+.phone {
+  position: relative;
+  z-index: 2;
+  width: clamp(14rem, 26vw, 19rem);
+  aspect-ratio: 9 / 18.5;
+  padding: 0.7rem;
+  background: var(--ink);
+  border: var(--ink-w) solid var(--ink);
+  border-radius: 2.25rem;
+  box-shadow: 12px 12px 0 rgba(6, 35, 31, 0.32);
+  transform: rotate(3deg);
+}
+
+.phoneNotch {
+  position: absolute;
+  inset-block-start: 1.1rem;
+  inset-inline: 0;
+  width: 4.5rem;
+  height: 0.4rem;
+  margin-inline: auto;
+  background: #2c4a45;
+  border-radius: 0.2rem;
+  z-index: 2;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  height: 100%;
+  padding: 1.65rem 0.85rem 0.9rem;
+  background: var(--sg, #fff);
+  border-radius: 1.7rem;
+  overflow: hidden;
+  animation: reload 620ms var(--pop) both;
+}
+
+/* The reload is the point: the device does not cross-fade, it slams the new
+   world in from the side the way a cartridge would. */
+@keyframes reload {
+  from {
+    opacity: 0;
+    transform: translateX(28%) rotate(4deg);
+  }
+}
+
+.screenTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.sparkCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.05rem 0.5rem;
+  background: var(--sun);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+}
+
+.sparkCount svg {
+  width: 14px;
+  height: 14px;
+}
+
+.screenCard {
+  display: grid;
+  place-items: center;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--pick);
+  border: var(--ink-w) solid var(--ink);
+  border-radius: 1.1rem;
+}
+
+.screenGlyph {
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  line-height: 1;
+  color: var(--ink);
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.tasks li {
+  display: grid;
+  grid-template-columns: 1.15rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.5rem;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 0.6rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  animation: taskIn 500ms var(--pop) both;
+  animation-delay: calc(320ms + var(--i) * 90ms);
+}
+
+@keyframes taskIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+.tasks li[data-done] {
+  background: #eafff9;
+}
+
+.tick {
+  display: grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  background: var(--line);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  font-size: 0.6875rem;
+}
+
+.tasks li[data-done] .tick {
+  background: var(--sun);
+}
+
+.taskLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.taskValue {
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.screenBtn {
+  padding: 0.45rem;
+  text-align: center;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.0625rem;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 0.7rem;
+}
+
+/* ── Stickers ───────────────────────────────────────────────────────────── */
+
+.stickers {
+  position: absolute;
+  inset: -4% -8%;
+  z-index: 1;
+  pointer-events: none;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: clamp(1.1rem, 2.1vw, 1.75rem);
+  color: var(--ink);
+}
+
+.stickers span {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2.4em;
+  height: 2.4em;
+  background: #fff;
+  border: var(--ink-w) solid var(--ink);
+  border-radius: 50%;
+  opacity: 0.85;
+  animation: float 5200ms ease-in-out infinite alternate, drop 620ms var(--pop) both;
+  animation-delay: 0s, calc(var(--i) * 70ms);
+}
+
+.stickers span:nth-child(1) {
+  inset-block-start: 12%;
+  inset-inline-start: 6%;
+  animation-duration: 4600ms, 620ms;
+}
+.stickers span:nth-child(2) {
+  inset-block-end: 16%;
+  inset-inline-start: 15%;
+  background: var(--sun);
+  animation-duration: 5600ms, 620ms;
+}
+.stickers span:nth-child(3) {
+  inset-block-start: 8%;
+  inset-inline-end: 44%;
+  background: var(--hot);
+  animation-duration: 6200ms, 620ms;
+}
+.stickers span:nth-child(4) {
+  inset-block-end: 8%;
+  inset-inline-end: 6%;
+  animation-duration: 5000ms, 620ms;
+}
+.stickers span:nth-child(5) {
+  inset-block-start: 46%;
+  inset-inline-start: 2%;
+  background: var(--line);
+  animation-duration: 5900ms, 620ms;
+}
+
+@keyframes float {
+  from {
+    transform: translateY(-8px) rotate(-8deg);
+  }
+  to {
+    transform: translateY(10px) rotate(9deg);
+  }
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-40deg);
+  }
+}
+
+/* ── Section furniture ──────────────────────────────────────────────────── */
+
+.worlds,
+.cast,
+.how,
+.parents,
+.get {
+  padding: clamp(2.5rem, 7vh, 4.5rem) clamp(1rem, 4vw, 3rem);
+  border-block-start: var(--ink-w) solid var(--ink);
+}
+
+.h2 {
+  font-family: var(--font-lalezar), sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4.4vw, 3rem);
+  line-height: 1.35;
+}
+
+.sub {
+  max-width: 52ch;
+  margin-block-start: 0.15rem;
+  color: var(--dim);
+}
+
+/* ── World picker ───────────────────────────────────────────────────────── */
+
+.picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: clamp(0.85rem, 2vw, 1.5rem);
+  margin-block-start: clamp(1.5rem, 4vh, 2.25rem);
+}
+
+.pickBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  width: 100%;
+  height: 100%;
+  padding: 1.1rem 1.1rem 1.25rem;
+  text-align: start;
+  background: #fff;
+  border: var(--ink-w) solid var(--ink);
+  box-shadow: var(--drop);
+  transition: transform 260ms var(--pop), box-shadow 260ms var(--pop), background 260ms var(--pop);
+}
+
+.picker li:nth-child(even) .pickBtn {
+  transform: rotate(-1.2deg);
+}
+
+.pickBtn:hover {
+  transform: translate(-3px, -3px) rotate(0deg);
+  box-shadow: 10px 10px 0 var(--ink);
+}
+
+.pickBtn[data-on] {
+  background: var(--a);
+  transform: translate(-3px, -3px) rotate(0deg);
+  box-shadow: 10px 10px 0 var(--ink);
+}
+
+.pickGlyph {
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.6rem;
+  line-height: 1;
+  background: var(--a);
+  border: var(--ink-w) solid var(--ink);
+  border-radius: 50%;
+}
+
+.pickBtn[data-on] .pickGlyph {
+  background: #fff;
+}
+
+.pickName {
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.375rem;
+  line-height: 1.5;
+}
+
+.pickTag {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.pickBtn[data-on] .pickTag {
+  color: var(--ink);
+}
+
+.progress {
+  display: block;
+  width: 100%;
+  height: 0.7rem;
+  margin-block-start: 0.6rem;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress i {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+}
+
+.pickCount {
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.pickBtn[data-on] .pickCount {
+  color: var(--ink);
+}
+
+.pickBlurb {
+  max-width: 54ch;
+  margin-block-start: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--ink);
+  color: #eafff9;
+  font-size: 1.0625rem;
+}
+
+/* ── Cast ───────────────────────────────────────────────────────────────── */
+
+.castRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: clamp(1rem, 2.4vw, 1.75rem);
+  margin-block-start: clamp(1.5rem, 4vh, 2.25rem);
+}
+
+.castRow li {
+  opacity: 0;
+  transform: translateY(1.5rem) scale(0.94);
+  transition:
+    opacity 520ms var(--pop),
+    transform 520ms var(--pop);
+  transition-delay: calc(var(--i) * 90ms);
+}
+
+.castRow li[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  height: 100%;
+  padding: 1.25rem 1rem 1.5rem;
+  text-align: center;
+  background: var(--hue);
+  border: var(--ink-w) solid var(--ink);
+  box-shadow: var(--drop);
+  transition: transform 300ms var(--pop);
+}
+
+.card:hover {
+  transform: translateY(-6px) rotate(-1.5deg);
+}
+
+.cardFace {
+  width: clamp(6rem, 11vw, 8.5rem);
+}
+
+.card:hover .cardFace {
+  animation: wiggle 620ms var(--pop);
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-9deg) scale(1.05);
+  }
+  65% {
+    transform: rotate(7deg) scale(0.98);
+  }
+}
+
+.cardName {
+  font-family: var(--font-lalezar), sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+.cardPower {
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.cardLine {
+  margin-block-start: 0.5rem;
+  padding-block-start: 0.5rem;
+  border-block-start: 2px dashed rgba(6, 35, 31, 0.35);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+/* ── Strip ──────────────────────────────────────────────────────────────── */
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: clamp(1rem, 2.6vw, 2rem);
+  margin-block-start: clamp(1.75rem, 5vh, 2.75rem);
+}
+
+.strip li {
+  position: relative;
+  padding: 2rem 1.35rem 1.5rem;
+  background: #fff;
+  border: var(--ink-w) solid var(--ink);
+  box-shadow: var(--drop);
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 520ms var(--pop),
+    transform 520ms var(--pop);
+  transition-delay: calc(var(--i) * 110ms);
+}
+
+.strip li[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.strip li:nth-child(2) {
+  background: var(--sun);
+}
+
+.panelNo {
+  position: absolute;
+  inset-block-start: -1.1rem;
+  inset-inline-start: 1.25rem;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  background: var(--hot);
+  border: var(--ink-w) solid var(--ink);
+  border-radius: 50%;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.bubble {
+  display: inline-block;
+  position: relative;
+  margin-block-end: 0.75rem;
+  padding: 0.3rem 0.85rem;
+  background: var(--base);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 1.1rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--base);
+  border-inline-end: 2px solid var(--ink);
+  border-block-end: 2px solid var(--ink);
+  transform: translateY(-55%) rotate(45deg);
+}
+
+.panelTitle {
+  font-family: var(--font-lalezar), sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.45;
+}
+
+.panelBody {
+  margin-block-start: 0.2rem;
+  font-size: 1rem;
+  color: var(--dim);
+}
+
+/* ── Parents: the calm band ─────────────────────────────────────────────── */
+
+.parents {
+  background: #eafff9;
+  background-image: none;
+}
+
+.parentsHead {
+  max-width: 56ch;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0;
+  margin-block-start: clamp(1.5rem, 4vh, 2.25rem);
+  border-block-start: 2px solid var(--ink);
+}
+
+.facts > div {
+  padding: 1.1rem 1.15rem 1.35rem;
+  border-block-end: 2px solid var(--ink);
+  border-inline-start: 2px solid var(--ink);
+}
+
+.facts > div:last-child {
+  border-inline-start: 0;
+}
+
+.facts dt {
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.facts dd {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--dim);
+}
+
+/* ── Download ───────────────────────────────────────────────────────────── */
+
+.get {
+  text-align: center;
+}
+
+.getTitle {
+  font-family: var(--font-lalezar), sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  line-height: 1.25;
+}
+
+.get .cta {
+  justify-content: center;
+}
+
+/* ── Foot ───────────────────────────────────────────────────────────────── */
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  flex-wrap: wrap;
+  padding: 1.5rem clamp(1rem, 4vw, 3rem) clamp(3rem, 8vh, 5rem);
+  border-block-start: var(--ink-w) solid var(--ink);
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+/* ── Faces ──────────────────────────────────────────────────────────────── */
+
+/* Width belongs to whoever places the character — the mascot on the stage and
+   the portrait on a card are not the same size — so this rule does not claim it. */
+.face {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.face .skin {
+  fill: var(--hue);
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.face .eye {
+  fill: var(--ink);
+}
+
+.face .glint {
+  fill: #fff;
+}
+
+.face .mouth {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.face .blush {
+  fill: rgba(6, 35, 31, 0.16);
+}
+
+.face .limb,
+.face .whisker,
+.face .stem {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.face .whisker {
+  stroke-width: 3;
+}
+
+.face .tuft {
+  fill: var(--sun);
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.face .leaf {
+  fill: #3ec98a;
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+/* ── Focus ──────────────────────────────────────────────────────────────── */
+
+.world :is(a, button):focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ── Phone ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 880px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  .stage {
+    order: -1;
+    min-height: 26rem;
+  }
+
+  .nav {
+    order: 3;
+    flex-basis: 100%;
+    margin-inline-start: 0;
+    flex-wrap: wrap;
+  }
+
+  .getBtn {
+    margin-inline-start: auto;
+  }
+
+  .phone {
+    width: min(15rem, 62vw);
+  }
+
+  .mascot {
+    width: 8.5rem;
+    inset-inline-start: 2%;
+  }
+
+  .stickers span {
+    font-size: 1.4rem;
+  }
+
+  .facts > div {
+    border-inline-start: 0;
+    border-inline-end: 0;
+  }
+}
+
+/* ── Reduced motion: still a comic, just not a moving one ───────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot,
+  .stickers span,
+  .card:hover .cardFace {
+    animation: none;
+    transform: none;
+  }
+
+  .burst {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .screen,
+  .tasks li {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .castRow li,
+  .strip li {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ══ THE SCENE ═════════════════════════════════════════════════════════════
+   A short cartoon, keyed the way an animator keys one. Every beat is a state on
+   the world element, so the whole sequence is one timeline rather than a pile of
+   independent loops — and when it is over, everything is exactly where the
+   usable interface left it.
+
+   The principles are the real ones: anticipation before the dash, squash on the
+   contact, overshoot on the recovery, a held impact frame with nothing moving in
+   it at all, and a burst over the cut so the change of world is never seen
+   happening. */
+
+.playScene {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.1rem;
+  padding: 0.7rem 1.2rem;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: var(--sun);
+  color: var(--ink);
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.0625rem;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 160ms var(--pop), box-shadow 160ms var(--pop);
+}
+
+.playScene:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.playScene:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.playScene:disabled {
+  cursor: default;
+  background: var(--pick);
+  color: #fff;
+}
+
+.playSceneIcon {
+  font-size: 0.75rem;
+}
+
+/* ── The layer ──────────────────────────────────────────────────────────── */
+
+.sceneLayer {
+  position: absolute;
+  /* Vertically generous, horizontally contained: the cast may leave the top and
+     bottom of the stage, but a character half off the viewport is a bug. */
+  inset: -8% 0;
+  z-index: 6;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.sceneLayer > *,
+.sceneLayer .interrupt {
+  position: absolute;
+  opacity: 0;
+}
+
+/* ── Sharara, arriving ──────────────────────────────────────────────────── */
+
+.runner {
+  inset-block-end: 6%;
+  inset-inline-start: -18%;
+  width: clamp(7rem, 15vw, 11rem);
+  transform-origin: 50% 100%;
+}
+
+/* Anticipation: she compresses before she goes. Nothing travels yet. */
+.world[data-scene="wind"] .runner {
+  opacity: 1;
+  animation: crouch 420ms cubic-bezier(0.4, 0, 0.6, 1) both;
+}
+
+@keyframes crouch {
+  0% {
+    transform: translateX(0) scale(1, 1);
+  }
+  60% {
+    transform: translateX(-6%) scale(1.16, 0.82);
+  }
+  100% {
+    transform: translateX(-10%) scale(1.2, 0.78);
+  }
+}
+
+.world[data-scene="dash"] .runner {
+  opacity: 1;
+  animation: dash 240ms cubic-bezier(0.3, 0, 0.2, 1) both;
+}
+
+@keyframes dash {
+  0% {
+    transform: translateX(-10%) scale(1.2, 0.78);
+  }
+  100% {
+    transform: translate(95%, -6%) scale(0.9, 1.14) rotate(-8deg);
+  }
+}
+
+/* The impact frame: she is *held*, stretched, at the moment of contact. */
+.world[data-scene="hit"] .runner,
+.world[data-scene="scatter"] .runner {
+  opacity: 1;
+  transform: translate(95%, -6%) scale(0.9, 1.14) rotate(-8deg);
+}
+
+.world[data-scene="scatter"] .runner {
+  animation: recover 640ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+@keyframes recover {
+  0% {
+    transform: translate(95%, -6%) scale(0.78, 1.24) rotate(-8deg);
+  }
+  55% {
+    transform: translate(78%, 2%) scale(1.1, 0.9) rotate(4deg);
+  }
+  100% {
+    transform: translate(84%, 0) scale(1, 1) rotate(0deg);
+  }
+}
+
+.world[data-scene="cut"] .runner,
+.world[data-scene="wipe"] .runner {
+  opacity: 1;
+  transform: translate(84%, 0);
+}
+
+.world[data-scene="settle"] .runner {
+  opacity: 0;
+  transform: translate(84%, 6%) scale(0.9);
+  transition: opacity 460ms ease, transform 460ms ease;
+}
+
+/* Dust, where she pushed off from. */
+.dust {
+  inset-block-end: 4%;
+  inset-inline-start: -14%;
+  width: 5rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.85), transparent 72%);
+}
+
+.world[data-scene="dash"] .dust {
+  animation: puff 420ms ease-out both;
+}
+
+@keyframes puff {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.1) translateX(-1rem);
+  }
+}
+
+/* Speed lines. Four, not forty. */
+.streaks {
+  inset-block-end: 26%;
+  inset-inline-start: 0;
+  width: 60%;
+  height: 5rem;
+}
+
+.streaks i {
+  position: absolute;
+  inset-inline-start: 0;
+  top: calc(var(--i) * 1.15rem);
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform-origin: 0 50%;
+}
+
+.world[data-scene="dash"] .streaks {
+  opacity: 1;
+}
+
+.world[data-scene="dash"] .streaks i {
+  animation: streak 240ms linear both;
+  animation-delay: calc(var(--i) * 26ms);
+}
+
+@keyframes streak {
+  0% {
+    transform: scaleX(0);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scaleX(1) translateX(40%);
+    opacity: 0;
+  }
+}
+
+/* ── The impact ─────────────────────────────────────────────────────────── */
+
+.impact {
+  inset-block-start: 22%;
+  inset-inline-start: 32%;
+  display: grid;
+  place-items: center;
+  width: 12rem;
+  height: 12rem;
+}
+
+.impactRays {
+  position: absolute;
+  inset: 0;
+}
+
+.impactRays i {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: 6rem;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--ink);
+  transform-origin: 0 50%;
+  transform: rotate(var(--a)) scaleX(0);
+}
+
+.impactWord {
+  position: relative;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  color: var(--sun);
+  -webkit-text-stroke: 5px var(--ink);
+  paint-order: stroke fill;
+  transform: rotate(-9deg) scale(0.2);
+}
+
+/* Two frames, held. The whole point of an impact frame is that it does not move. */
+.world[data-scene="hit"] .impact,
+.world[data-scene="scatter"] .impact {
+  opacity: 1;
+}
+
+.world[data-scene="hit"] .impactRays i,
+.world[data-scene="scatter"] .impactRays i {
+  transform: rotate(var(--a)) scaleX(1);
+  transition: transform 120ms cubic-bezier(0.2, 1.7, 0.4, 1);
+}
+
+.world[data-scene="hit"] .impactWord,
+.world[data-scene="scatter"] .impactWord {
+  transform: rotate(-9deg) scale(1);
+  transition: transform 180ms cubic-bezier(0.2, 1.9, 0.4, 1);
+}
+
+.world[data-scene="scatter"] .impact {
+  animation: impactOut 640ms 220ms ease-in both;
+}
+
+@keyframes impactOut {
+  to {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+/* ── The scatter ────────────────────────────────────────────────────────── */
+
+.bits {
+  inset-block-start: 30%;
+  inset-inline-start: 42%;
+  width: 0;
+  height: 0;
+}
+
+.bits i {
+  position: absolute;
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.4rem;
+  font-style: normal;
+  color: var(--ink);
+}
+
+.world[data-scene="scatter"] .bits,
+.world[data-scene="cut"] .bits {
+  opacity: 1;
+}
+
+.world[data-scene="scatter"] .bits i {
+  animation: fling 900ms cubic-bezier(0.15, 0.7, 0.3, 1) both;
+  animation-delay: var(--t);
+}
+
+@keyframes fling {
+  0% {
+    transform: rotate(var(--a)) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--a)) translateX(var(--d)) rotate(320deg);
+    opacity: 0;
+  }
+}
+
+/* ── The interruption ───────────────────────────────────────────────────── */
+
+/* The cat comes in from the physical left, which in this RTL page is the side
+   Sharara did not arrive from. Physical properties on purpose. */
+.interrupt {
+  inset-block-end: 8%;
+  left: 0;
+  right: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.interruptFace {
+  width: clamp(5rem, 10vw, 7.5rem);
+}
+
+.bubble {
+  position: relative;
+  padding: 0.5rem 0.9rem;
+  border: 3px solid var(--ink);
+  border-radius: 1rem;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-lalezar), sans-serif;
+  font-size: 1.0625rem;
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  inset-block-end: -0.7rem;
+  inset-inline-start: 1.1rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  background: #fff;
+  border-inline-end: 3px solid var(--ink);
+  border-block-end: 3px solid var(--ink);
+  transform: rotate(45deg);
+}
+
+.world[data-scene="cut"] .interrupt {
+  opacity: 1;
+  animation: barge 780ms cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+@keyframes barge {
+  0% {
+    transform: translateX(60%) rotate(12deg);
+  }
+  60% {
+    transform: translateX(-6%) rotate(-4deg);
+  }
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+.world[data-scene="wipe"] .interrupt {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── The burst that covers the cut ──────────────────────────────────────── */
+
+.wipe {
+  inset: -30%;
+  border-radius: 50%;
+  background: var(--pick);
+  transform: scale(0);
+}
+
+.world[data-scene="wipe"] .wipe {
+  opacity: 1;
+  animation: cover 520ms cubic-bezier(0.5, 0, 0.5, 1) both;
+}
+
+@keyframes cover {
+  0% {
+    transform: scale(0);
+  }
+  45% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* ── The phone takes the hit ────────────────────────────────────────────── */
+
+.world[data-scene="hit"] .phone {
+  animation: knock 180ms cubic-bezier(0.3, 0, 0.3, 1) both;
+}
+
+.world[data-scene="scatter"] .phone {
+  animation: wobble 640ms cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+@keyframes knock {
+  to {
+    transform: translateX(-5%) rotate(6deg) scale(0.92, 1.08);
+  }
+}
+
+@keyframes wobble {
+  0% {
+    transform: translateX(-5%) rotate(6deg) scale(0.92, 1.08);
+  }
+  40% {
+    transform: translateX(1.5%) rotate(-3deg) scale(1.05, 0.95);
+  }
+  70% {
+    transform: rotate(1.5deg) scale(0.99, 1.01);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* Reduced motion: the scene never starts. The world still changes and the shout
+   still lands, which is the part that carries information. */
+@media (prefers-reduced-motion: reduce) {
+  .sceneLayer {
+    display: none;
+  }
+
+  .world[data-scene] .phone {
+    animation: none;
+  }
+}
+
+/* On a phone the stage is the width of the screen, so a character who enters
+   from 18% outside it is simply off the canvas for the first beat, and the dust
+   and the speed lines land outside the frame entirely. The scene keeps its
+   shape; it just travels less. */
+@media (max-width: 760px) {
+  .runner {
+    inset-inline-start: -6%;
+    width: clamp(5.5rem, 24vw, 8rem);
+  }
+
+  .dust,
+  .streaks {
+    display: none;
+  }
+
+  .impact {
+    inset-inline-start: 18%;
+    width: 9rem;
+    height: 9rem;
+  }
+
+  .interrupt {
+    inset-block-end: 2%;
+  }
+
+  .interruptFace {
+    width: clamp(4rem, 16vw, 5.5rem);
+  }
+}

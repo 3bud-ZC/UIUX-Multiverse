@@ -1,0 +1,946 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   09 · أثير — a radio set, and the archive behind it.
+
+   The layout grammar is the object: a wooden cabinet in the middle of a warm
+   room, with the catalogue set around it in horizontal bands the same
+   proportion as the cabinet's own front. Every surface here is drawn with
+   gradients and rules rather than photographed, and every control on the set
+   does something.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.world {
+  --base: #e5d3a3;
+  --ink: #241a10;
+  --dim: #5c4728;
+  --line: #c6ae78;
+  --hot: #a8321c;
+  --teal: #1f6b5e;
+
+  /* Set by the finish the visitor has fitted. See FINISHES in data.ts. */
+  --walnut-1: var(--wood-a, #4a2f1c);
+  --walnut-2: var(--wood-b, #2d1c10);
+  --mech: cubic-bezier(0.32, 0.72, 0.24, 1);
+
+  position: relative;
+  min-height: 100dvh;
+  background:
+    radial-gradient(120vmax 80vmax at 50% -20%, rgba(255, 240, 200, 0.55), transparent 60%),
+    linear-gradient(180deg, #eddfb6 0%, var(--base) 40%, #dcc793 100%);
+  color: var(--ink);
+  font-family: var(--font-tajawal), sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  overflow-x: clip;
+}
+
+/* ── Head ───────────────────────────────────────────────────────────────── */
+
+.head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+  padding: clamp(1.25rem, 3vh, 2rem) clamp(1rem, 5vw, 4rem) 1.1rem;
+  border-block-end: 1px solid var(--line);
+}
+
+.brand {
+  font-family: var(--font-messiri), sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  line-height: 1.4;
+}
+
+.sub {
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.75rem, 1.8vw, 1.5rem);
+  font-size: 0.9375rem;
+}
+
+.nav a {
+  color: var(--dim);
+  padding-block-end: 0.15rem;
+  border-block-end: 2px solid transparent;
+  transition: color 300ms var(--mech), border-color 300ms var(--mech);
+}
+
+.nav a:hover,
+.nav a:focus-visible {
+  color: var(--hot);
+  border-block-end-color: var(--hot);
+}
+
+/* ── The set ────────────────────────────────────────────────────────────── */
+
+.setSection {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(2rem, 6vh, 4rem) clamp(1rem, 5vw, 4rem) clamp(2.5rem, 7vh, 4.5rem);
+}
+
+.cabinet {
+  position: relative;
+  display: grid;
+  gap: clamp(0.75rem, 1.6vw, 1.35rem);
+  padding: clamp(1rem, 2.2vw, 1.85rem);
+  background: linear-gradient(150deg, var(--walnut-1), var(--walnut-2) 70%);
+  border-radius: 1.35rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 170, 0.28),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.5),
+    0 2rem 3.5rem -1.5rem var(--cast, rgba(50, 30, 12, 0.75));
+  transition: background 700ms var(--mech), box-shadow 700ms var(--mech);
+}
+
+/* Grain, cut once as a repeating gradient rather than an image. */
+.veneer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: calc(0.35 * var(--grain, 1));
+  background-image: repeating-linear-gradient(
+    92deg,
+    rgba(255, 226, 180, 0.06) 0 1px,
+    transparent 1px 4px,
+    rgba(0, 0, 0, 0.08) 4px 5px,
+    transparent 5px 11px
+  );
+}
+
+/* ── Dial ───────────────────────────────────────────────────────────────── */
+
+.dial {
+  position: relative;
+  padding: 0.55rem;
+  background: linear-gradient(180deg, #1a1109, #29190d);
+  border-radius: 0.6rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 220, 170, 0.18);
+}
+
+.glass {
+  position: relative;
+  height: clamp(9rem, 17vw, 12.5rem);
+  padding: 0.75rem 1.1rem;
+  overflow: hidden;
+  border-radius: 0.35rem;
+  background: linear-gradient(
+    180deg,
+    var(--glass-a, #f6e9c8) 0%,
+    color-mix(in srgb, var(--glass-a, #f6e9c8) 50%, var(--glass-b, #dcc287)) 55%,
+    var(--glass-b, #dcc287) 100%
+  );
+  transition: background 700ms var(--mech);
+}
+
+/* The lamp behind the glass. Its colour is the station's, so the room changes
+   temperature when the dial moves — the single strongest signal on the page. */
+.lamp {
+  position: absolute;
+  inset: -30% -10% auto;
+  height: 190%;
+  background: radial-gradient(60% 55% at var(--needle) 40%, var(--glow), transparent 70%);
+  opacity: 0.42;
+  transition: background 900ms var(--mech), opacity 500ms var(--mech);
+}
+
+.world[data-on] .lamp {
+  opacity: 0.85;
+}
+
+.track {
+  position: absolute;
+  inset: 0.75rem 1.6rem 1.9rem;
+}
+
+.scale {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 1.5rem;
+}
+
+.scale li {
+  width: 1px;
+  height: 0.5rem;
+  background: var(--dim);
+  opacity: 0.6;
+}
+
+.scale li[data-major] {
+  height: 1.15rem;
+  width: 2px;
+  opacity: 0.9;
+}
+
+.marks {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 2rem;
+  height: 3.5rem;
+}
+
+/* The scale is printed right to left, so a station at 0 sits at the right. */
+.marks li {
+  position: absolute;
+  inset-inline-end: calc(10% + var(--at) * 80%);
+  transform: translateX(50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  text-align: center;
+  transition: color 500ms var(--mech), opacity 500ms var(--mech);
+  opacity: 0.62;
+  color: var(--ink);
+}
+
+.marks li[data-on] {
+  opacity: 1;
+  color: var(--hot);
+}
+
+.marks b {
+  font-family: var(--font-messiri), sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.marks span {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.pointer {
+  position: absolute;
+  inset-block: -0.2rem -0.6rem;
+  inset-inline-end: calc(var(--needle) - 1px);
+  width: 2px;
+  background: var(--hot);
+  box-shadow: 0 0 8px rgba(168, 50, 28, 0.7);
+  transition: inset-inline-end 900ms var(--mech);
+}
+
+.pointer::before {
+  content: "";
+  position: absolute;
+  inset-block-start: -4px;
+  inset-inline-start: -4px;
+  width: 10px;
+  height: 10px;
+  background: var(--hot);
+  border-radius: 50%;
+}
+
+.band {
+  position: absolute;
+  inset-block-end: 0.55rem;
+  inset-inline-start: 1.1rem;
+  font-family: var(--font-messiri), sans-serif;
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+/* ── Controls ───────────────────────────────────────────────────────────── */
+
+.controls {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.power {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  font-family: var(--font-messiri), sans-serif;
+  font-size: 0.9375rem;
+  color: #f1e2c0;
+  background: linear-gradient(180deg, #3d2718, #241509);
+  border: 1px solid rgba(255, 220, 170, 0.25);
+  border-radius: 0.35rem;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+  transition: transform 160ms var(--mech), box-shadow 160ms var(--mech);
+}
+
+.power:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.powerLed {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #6b4a2c;
+  transition: background 400ms var(--mech), box-shadow 400ms var(--mech);
+}
+
+.world[data-on] .powerLed {
+  background: #ff6a3d;
+  box-shadow: 0 0 8px #ff6a3d;
+}
+
+.grilleWrap {
+  position: relative;
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  background: linear-gradient(180deg, #3a2415, #241509);
+  border-radius: 0.4rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 220, 170, 0.14);
+}
+
+.grille {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.grille i {
+  height: 2px;
+  background: rgba(233, 205, 153, 0.22);
+  border-radius: 1px;
+}
+
+/* The meter only moves when the set is on, and it is the only motion here that
+   loops — everything else waits for a hand. */
+.vu {
+  position: absolute;
+  inset-block-end: 0.55rem;
+  inset-inline: 0.75rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 1.35rem;
+  opacity: 0;
+  transition: opacity 500ms var(--mech);
+}
+
+.world[data-on] .vu {
+  opacity: 1;
+}
+
+.vu i {
+  flex: 1;
+  height: 22%;
+  background: var(--glow);
+  border-radius: 1px;
+  transform-origin: bottom;
+}
+
+.world[data-on] .vu i {
+  animation: vu 1100ms var(--mech) infinite alternate;
+  animation-delay: calc(var(--i) * -87ms);
+}
+
+@keyframes vu {
+  from {
+    height: 14%;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+/* ── The knob ───────────────────────────────────────────────────────────── */
+
+.knob {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(4.5rem, 8vw, 6.5rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  background:
+    radial-gradient(circle at 34% 28%, #6b452a, #2e1c0f 62%),
+    #2e1c0f;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 220, 170, 0.22),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.6),
+    0 6px 12px -4px rgba(0, 0, 0, 0.6);
+  transform: rotate(var(--knob-turn));
+  transition: transform 900ms var(--mech);
+}
+
+.knob:active {
+  cursor: grabbing;
+}
+
+.knobFace {
+  position: absolute;
+  inset: 0;
+}
+
+.knobFace i {
+  position: absolute;
+  inset-block-start: 3%;
+  inset-inline-start: calc(50% - 1px);
+  width: 2px;
+  height: 12%;
+  background: rgba(255, 226, 180, 0.4);
+  transform-origin: 50% 391%;
+  transform: rotate(var(--a));
+}
+
+.knobMark {
+  position: absolute;
+  inset-block-start: 12%;
+  width: 4px;
+  height: 26%;
+  border-radius: 2px;
+  background: var(--glow);
+  box-shadow: 0 0 6px var(--glow);
+  transition: background 700ms var(--mech);
+}
+
+.knobLabel {
+  /* Counter-rotated so the legend stays upright while the knob turns. */
+  font-family: var(--font-messiri), sans-serif;
+  font-size: 0.6875rem;
+  color: rgba(241, 226, 192, 0.65);
+  transform: rotate(calc(-1 * var(--knob-turn)));
+  transition: transform 900ms var(--mech);
+  margin-block-start: 28%;
+}
+
+/* ── Readout ────────────────────────────────────────────────────────────── */
+
+.readout {
+  animation: tuneIn 800ms var(--mech) both;
+}
+
+@keyframes tuneIn {
+  from {
+    opacity: 0;
+    transform: translateX(-1.25rem);
+    filter: blur(4px);
+  }
+}
+
+.decade {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  background: var(--teal);
+  color: #eef6f2;
+  font-size: 0.875rem;
+}
+
+.stationName {
+  margin-block: 0.6rem 0.5rem;
+  font-family: var(--font-messiri), sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1.3;
+}
+
+.mood {
+  max-width: 34ch;
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+}
+
+.announcer {
+  margin-block-start: 0.75rem;
+  font-family: var(--font-messiri), sans-serif;
+  color: var(--hot);
+}
+
+.hint {
+  max-width: 40ch;
+  margin-block-start: 1.25rem;
+  padding-block-start: 0.9rem;
+  border-block-start: 1px solid var(--line);
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--dim);
+}
+
+/* ── Bands ──────────────────────────────────────────────────────────────── */
+
+.schedule,
+.archive,
+.about {
+  padding: clamp(2rem, 6vh, 3.5rem) clamp(1rem, 5vw, 4rem);
+  border-block-start: 1px solid var(--line);
+}
+
+.secHead {
+  max-width: 48ch;
+  margin-block-end: clamp(1.25rem, 3vh, 2rem);
+}
+
+.secHead h2 {
+  font-family: var(--font-messiri), sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.4;
+}
+
+.secHead p {
+  color: var(--dim);
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0;
+  border-block-start: 1px solid var(--line);
+}
+
+.slots li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.9rem 0.5rem 1rem;
+  border-block-end: 1px solid var(--line);
+  animation: slotIn 600ms var(--mech) both;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+@keyframes slotIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+.slotTime {
+  font-family: var(--font-messiri), sans-serif;
+  font-weight: 700;
+  color: var(--hot);
+  font-variant-numeric: tabular-nums;
+}
+
+.slotTitle {
+  min-width: 0;
+}
+
+.slotKind {
+  font-size: 0.8125rem;
+  padding: 0.05rem 0.55rem;
+  color: var(--teal);
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ── Archive table ──────────────────────────────────────────────────────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th {
+  padding: 0.5rem 0.75rem 0.7rem;
+  text-align: start;
+  font-family: var(--font-messiri), sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--dim);
+  border-block-end: 2px solid var(--ink);
+}
+
+.table td {
+  padding: 0.75rem;
+  border-block-end: 1px solid var(--line);
+}
+
+.table tbody tr {
+  animation: slotIn 600ms var(--mech) both;
+  animation-delay: calc(var(--i) * 90ms);
+  transition: background 260ms var(--mech);
+}
+
+.table tbody tr:hover {
+  background: rgba(31, 107, 94, 0.09);
+}
+
+.table td:first-child {
+  font-family: var(--font-messiri), sans-serif;
+  font-weight: 700;
+}
+
+.len {
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+/* ── The plate ──────────────────────────────────────────────────────────── */
+
+.plate {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0;
+  border: 1px solid var(--line);
+  background: rgba(255, 244, 214, 0.5);
+}
+
+.plate > div {
+  padding: 0.9rem 1.1rem 1.1rem;
+  border-inline-start: 1px solid var(--line);
+}
+
+.plate > div:last-child {
+  border-inline-start: 0;
+}
+
+.plate dt {
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.plate dd {
+  font-family: var(--font-messiri), sans-serif;
+  font-weight: 700;
+  font-size: 1.0625rem;
+}
+
+/* ── Foot ───────────────────────────────────────────────────────────────── */
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  flex-wrap: wrap;
+  padding: 1.5rem clamp(1rem, 5vw, 4rem) clamp(3rem, 8vh, 5rem);
+  border-block-start: 1px solid var(--line);
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+/* ── Focus ──────────────────────────────────────────────────────────────── */
+
+.world :is(a, button, [role="slider"]):focus-visible {
+  outline: 2px solid var(--hot);
+  outline-offset: 3px;
+}
+
+/* ── Phone ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 880px) {
+  .head {
+    grid-template-columns: 1fr;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .setSection {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .glass {
+    height: 9.5rem;
+    padding-inline: 0.75rem;
+  }
+
+  .marks span {
+    display: none;
+  }
+
+  .controls {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "power grille"
+      "knob knob";
+    justify-items: center;
+  }
+
+  .power {
+    grid-area: power;
+  }
+
+  .grilleWrap {
+    grid-area: grille;
+    width: 100%;
+  }
+
+  .knob {
+    grid-area: knob;
+    width: 6.5rem;
+  }
+
+  .slots li {
+    padding-inline: 0;
+  }
+
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    display: none;
+  }
+
+  .plate > div {
+    border-inline-start: 0;
+    border-block-end: 1px solid var(--line);
+  }
+}
+
+/* ── Reduced motion: the set is still lit and still tuned ───────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .world[data-on] .vu i {
+    animation: none;
+    height: 55%;
+  }
+
+  .readout,
+  .slots li,
+  .table tbody tr {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* ══ The fitted finish ═════════════════════════════════════════════════════
+   Everything below is here because the finish is a real configuration of the
+   object rather than a background swap: the cloth over the speaker, the front
+   plate, the knob faces and the pilot lamp all change with it. */
+
+.grille i {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--cloth, #8a6a44) 70%, #000),
+    var(--cloth, #8a6a44)
+  );
+  transition: background 700ms var(--mech);
+}
+
+.power {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--knob-face, #2a1a10) 70%, #fff 12%),
+    var(--knob-face, #2a1a10)
+  );
+  border-color: var(--knob-edge, rgba(255, 220, 170, 0.25));
+  color: var(--plate-face, #f1e2c0);
+  transition: background 700ms var(--mech), border-color 700ms var(--mech);
+}
+
+.world[data-on] .powerLed {
+  background: var(--glow);
+  box-shadow: 0 0 10px var(--glow);
+}
+
+.knob,
+.volKnob {
+  transition: background 700ms var(--mech);
+}
+
+.knobFace i {
+  background: var(--knob-edge, rgba(255, 220, 170, 0.3));
+}
+
+/* ── The volume knob ────────────────────────────────────────────────────── */
+
+.volKnob {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(3rem, 6vw, 4rem);
+  height: clamp(3rem, 6vw, 4rem);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 232, 200, 0.24), transparent 58%),
+    linear-gradient(160deg, color-mix(in srgb, var(--knob-face) 78%, #fff 14%), var(--knob-face));
+  box-shadow:
+    inset 0 0 0 1px var(--knob-edge),
+    0 0.4rem 0.9rem -0.35rem rgba(0, 0, 0, 0.7);
+  cursor: grab;
+  touch-action: none;
+}
+
+.volKnob:active {
+  cursor: grabbing;
+}
+
+.volKnob:focus-visible {
+  outline: 2px solid var(--hot);
+  outline-offset: 3px;
+}
+
+/* The pointer on the volume knob reads the fader position directly. */
+.volMark {
+  position: absolute;
+  inset: 8% auto auto 50%;
+  width: 2px;
+  height: 34%;
+  margin-inline-start: -1px;
+  background: var(--plate-face);
+  transform-origin: 50% 118%;
+  transform: rotate(var(--vol-turn, 0deg));
+  transition: transform 200ms var(--mech);
+}
+
+/* ── The finish selector ────────────────────────────────────────────────── */
+
+.finishes {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.35rem;
+}
+
+.finishLabel {
+  font-family: var(--font-messiri), sans-serif;
+  font-size: 0.8125rem;
+  color: var(--plate-face);
+  opacity: 0.8;
+}
+
+.finishList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.finishChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.6rem 0.3rem 0.35rem;
+  border: 1px solid var(--knob-edge);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--plate-face);
+  font-size: 0.8125rem;
+  transition: border-color 300ms var(--mech), background-color 300ms var(--mech);
+}
+
+.finishChip:hover {
+  background: rgba(0, 0, 0, 0.34);
+}
+
+.finishChip[data-on] {
+  border-color: var(--glow);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.finishSwatch {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: var(--chip);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+.finishName {
+  font-family: var(--font-tajawal), sans-serif;
+}
+
+.finishNote {
+  font-size: 0.8125rem;
+  color: var(--plate-face);
+  opacity: 0.62;
+}
+
+/* ── The band's own facts ───────────────────────────────────────────────── */
+
+.bandSpecs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin-block: 0.9rem;
+  padding-block-start: 0.8rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.bandSpecs dt {
+  font-family: var(--font-messiri), sans-serif;
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+.bandSpecs dd {
+  font-size: 1rem;
+}
+
+/* ── Tuning: the set hisses, the glass flickers, the needle is in motion ── */
+
+.world[data-tuning] .lamp {
+  opacity: 0.5;
+  filter: saturate(0.4);
+}
+
+.world[data-tuning] .glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.16) 0 1px,
+    transparent 1px 3px
+  );
+  animation: hash 90ms steps(2) infinite;
+}
+
+@keyframes hash {
+  to {
+    transform: translateY(3px);
+  }
+}
+
+/* The meter is driven by the band's tempo, so it beats with what is playing. */
+.world[data-on] .vu i {
+  animation: vu var(--beat, 0.9s) steps(3, jump-none) infinite alternate;
+  animation-delay: calc(var(--i) * var(--beat, 0.9s) / -18);
+}
+
+@keyframes vu {
+  from {
+    transform: scaleY(calc(0.2 + var(--vol, 0.6) * 0.3));
+  }
+  to {
+    transform: scaleY(calc(0.4 + var(--vol, 0.6) * 0.6));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world[data-tuning] .glass::after,
+  .world[data-on] .vu i {
+    animation: none;
+  }
+}
+
+/* The volume knob is the smaller of the two, and its legend sits under it
+   rather than around it — the tuner's ring legend would crowd it. */
+.volKnob .knobLabel {
+  position: absolute;
+  inset: auto auto -1.15rem 50%;
+  transform: translateX(50%);
+  writing-mode: horizontal-tb;
+  font-family: var(--font-messiri), sans-serif;
+  font-size: 0.625rem;
+  letter-spacing: 0;
+  color: var(--plate-face);
+  opacity: 0.75;
+}
+
+@media (max-width: 760px) {
+  .controls {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 1.6rem;
+  }
+}

@@ -1,0 +1,1935 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   03 · PULSE — a listening service, its label, and the archive it bought.
+
+   The whole stylesheet is downstream of one rule: **the record sets the page.**
+
+   Two inks (`--pulse-hot`, `--pulse-alt`) are registered as `<color>` so a key
+   change cross-fades on one curve instead of snapping element by element, and
+   one duration (`--beat`, seconds per beat of whatever is playing) times every
+   moving thing on the page — the level meters, the on-air dot, the playing row,
+   the press slipping out of register. Change the record and the site does not
+   merely recolour; it runs at a different speed.
+
+   `data-house` then re-grammars the same markup three ways. The floor is a
+   two-colour poster hung against an oversized name. The archive is a sheet of
+   paper, set right to left in display kufi, with its maqam ruled beside it. The
+   room is an engineer's document, mono and monochrome, where the take outranks
+   the performer. Not three themes — three layouts, three type systems, three
+   densities.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@property --pulse-hot {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ff2e7e;
+}
+
+@property --pulse-alt {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f5ff3d;
+}
+
+.page {
+  --ground: #0b0a0c;
+  --ink: #fbf7ff;
+  --dim: #a79ab4;
+  --line: #2c2533;
+  --raise: #141118;
+
+  /* Display / body / data. The archive swaps the first two for Arabic faces. */
+  --display: var(--font-shoulders), "Arial Narrow", sans-serif;
+  --body: var(--font-barlow), system-ui, sans-serif;
+  --data: var(--font-space-mono), ui-monospace, monospace;
+
+  --console-h: 4.75rem;
+  --gutter: clamp(1.1rem, 4vw, 4.5rem);
+
+  position: relative;
+  min-height: 100dvh;
+  padding-bottom: calc(var(--console-h) + 7rem);
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--body);
+  overflow-x: clip;
+  transition:
+    --pulse-hot 620ms cubic-bezier(0.3, 0.7, 0, 1),
+    --pulse-alt 620ms cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+/* The house tint. The ground itself never changes — the escape control is keyed
+   to it — but the temperature of the room does. */
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 90% at 50% 0%,
+    color-mix(in srgb, var(--pulse-hot) 9%, transparent),
+    transparent 62%
+  );
+}
+
+.field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ── The desk ───────────────────────────────────────────────────────────── */
+
+.desk {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(0.75rem, 3vw, 2.5rem);
+  padding: 0.9rem var(--gutter);
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 24;
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* The mark is a level meter, so the logotype reads the transport. It is the one
+   place on the page where the brand itself is allowed to move. */
+.markMeter {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 1.05em;
+}
+
+.markMeter i {
+  width: 3px;
+  height: 30%;
+  background: var(--pulse-hot);
+}
+
+.page[data-playing] .markMeter i {
+  animation: level var(--beat) steps(2, jump-none) infinite alternate;
+  animation-delay: calc(var(--i) * var(--beat) / -5);
+}
+
+@keyframes level {
+  from {
+    height: 22%;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+.tape {
+  display: flex;
+  justify-self: center;
+  gap: 1px;
+  padding: 2px;
+  background: var(--line);
+}
+
+.tapeItem {
+  padding: 0.4rem 1rem 0.45rem;
+  background: var(--ground);
+  color: var(--dim);
+  font-family: var(--data);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 200ms ease, background-color 200ms ease;
+}
+
+.tapeItem[dir="rtl"] {
+  font-family: var(--font-almarai), sans-serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.tapeItem:hover {
+  color: var(--ink);
+}
+
+.tapeItem[data-on] {
+  background: var(--pulse-hot);
+  color: #0b0a0c;
+}
+
+.tapeItem:focus-visible {
+  outline: 2px solid var(--pulse-alt);
+  outline-offset: 2px;
+}
+
+.setIn {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  font-family: var(--data);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.setIn b {
+  color: var(--pulse-alt);
+  font-weight: 700;
+}
+
+/* The archive's key is a maqam name, and a maqam name is not mono. */
+.page[data-house="archive"] .setIn b {
+  font-family: var(--font-almarai), sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+}
+
+/* ══ THE STAGE ═════════════════════════════════════════════════════════════ */
+
+.stage {
+  position: relative;
+  z-index: 1;
+  padding: clamp(2rem, 6vw, 5rem) var(--gutter) 0;
+}
+
+/* The sheet is nothing on the floor and in the room — the record simply sits on
+   the page. In the archive it becomes the paper the whole record is printed on,
+   which is why the lockup, the scrub and the sides all live inside it. */
+.sheet {
+  position: relative;
+}
+
+.stageFrame {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr) minmax(0, 15rem);
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ── Sleeve ─────────────────────────────────────────────────────────────── */
+
+.sleeve {
+  --c-paper: #0d0b11;
+  --c-ink: #efe9f7;
+  --c-hot: var(--pulse-hot);
+  --c-alt: var(--pulse-alt);
+
+  position: relative;
+  grid-column: 1;
+  align-self: end;
+  animation: sleeveIn 700ms cubic-bezier(0.22, 1, 0.3, 1) both;
+}
+
+@keyframes sleeveIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(-1.4deg);
+  }
+}
+
+.sleeveArt {
+  width: 100%;
+  aspect-ratio: 1;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--pulse-alt) 40%, transparent),
+    0 28px 60px -24px rgb(0 0 0 / 0.9);
+}
+
+.sleeve figcaption {
+  margin-top: 0.7rem;
+  font-family: var(--data);
+  font-size: 0.625rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── The lockup ─────────────────────────────────────────────────────────── */
+
+/* The name is pulled back over the sleeve. A record cover and the artist's name
+   competing for the same few centimetres is the oldest move in sleeve design,
+   and it is the reason this hero is a composition rather than two columns. */
+.stageText {
+  position: relative;
+  z-index: 2;
+  grid-column: 2;
+  min-width: 0;
+  margin-inline-start: clamp(-4.5rem, -3.5vw, -1rem);
+}
+
+@media (max-width: 1180px) {
+  .stageText {
+    margin-inline-start: 0;
+  }
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6ch;
+  margin-bottom: 0.7rem;
+  font-family: var(--data);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pulse-hot);
+}
+
+.live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pulse-hot);
+}
+
+.page[data-playing] .live {
+  animation: blip var(--beat) ease-out infinite;
+}
+
+@keyframes blip {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.9);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.stageTitle {
+  display: grid;
+  margin-bottom: 1.1rem;
+}
+
+.artistLine {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 72;
+  font-weight: 800;
+  font-size: clamp(3.6rem, 13vw, 9rem);
+  line-height: 0.82;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: var(--ink);
+  /* The second plate, printed a hair off. One offset, never a glow. */
+  text-shadow: 0.05em 0.028em 0 color-mix(in srgb, var(--pulse-hot) 85%, transparent);
+}
+
+.albumLine {
+  margin-top: 0.4em;
+  font-family: var(--body);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.9vw, 1.4rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--pulse-alt);
+}
+
+/* The key change: for one bar the two plates disagree, then settle. */
+.page[data-changing] .artistLine {
+  animation: slip var(--bar) cubic-bezier(0.2, 0.9, 0.1, 1) both;
+}
+
+@keyframes slip {
+  0% {
+    transform: translate3d(-0.32em, 0, 0) skewX(-6deg);
+    opacity: 0;
+    text-shadow: -0.13em 0.07em 0 var(--pulse-alt);
+  }
+  55% {
+    text-shadow: 0.09em 0.05em 0 var(--pulse-hot);
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.page[data-changing] .albumLine {
+  animation: riseIn calc(var(--bar) * 0.7) 90ms cubic-bezier(0.2, 0.9, 0.1, 1) both;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+}
+
+.note {
+  max-width: 36ch;
+  margin-bottom: 1.4rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 80%, var(--ground));
+}
+
+.specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem clamp(1.1rem, 3vw, 2.6rem);
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
+.specs dt {
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.specs dd {
+  margin-top: 0.15rem;
+  font-family: var(--data);
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+
+/* ── The portrait, trimmed and hung off the end of the frame ────────────── */
+
+.portraitWrap {
+  --p-paper: #f2ecf6;
+  --p-ink: #14111b;
+  --p-hot: var(--pulse-hot);
+  --p-alt: var(--pulse-alt);
+
+  grid-column: 3;
+  align-self: end;
+  margin-bottom: -1px;
+  /* Cut on a diagonal, so the plate reads as trimmed stock, not as a card. */
+  clip-path: polygon(0 6%, 100% 0, 100% 100%, 0 100%);
+  animation: portraitIn 820ms cubic-bezier(0.22, 1, 0.3, 1) both;
+}
+
+@keyframes portraitIn {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+}
+
+.portrait {
+  width: 100%;
+  height: auto;
+}
+
+/* ── Scrub ──────────────────────────────────────────────────────────────── */
+
+.scrub {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem clamp(1rem, 3vw, 2rem);
+  margin-top: clamp(1.6rem, 4vw, 2.6rem);
+  padding-top: 1rem;
+  border-top: 2px solid var(--pulse-hot);
+}
+
+.scrubHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.8ch;
+  min-width: 0;
+  font-size: 0.9375rem;
+}
+
+.scrubN {
+  font-family: var(--data);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  color: var(--pulse-alt);
+}
+
+.scrubHead b {
+  font-weight: 600;
+}
+
+.scrubHead em {
+  font-family: var(--font-almarai), sans-serif;
+  font-style: normal;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.scrubTime {
+  grid-column: 2;
+  grid-row: 1;
+  font-family: var(--data);
+  font-size: 0.75rem;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.scrubTime i {
+  font-style: normal;
+  opacity: 0.4;
+}
+
+/* The waveform is the seek control: a range input sits transparently on top of
+   it, so pointer, keyboard and assistive tech all get the same target. */
+.seek {
+  position: relative;
+  grid-column: 1 / -1;
+}
+
+.wave {
+  width: 100%;
+  height: clamp(48px, 7vw, 82px);
+}
+
+.wave rect,
+.dockWave rect,
+.trackWave rect {
+  fill: color-mix(in srgb, var(--ink) 26%, transparent);
+}
+
+.wave rect[data-played],
+.dockWave rect[data-played] {
+  fill: var(--pulse-hot);
+}
+
+.seekInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  background: none;
+  cursor: ew-resize;
+}
+
+.seekInput::-webkit-slider-thumb {
+  appearance: none;
+  width: 3px;
+  height: 100%;
+  background: var(--pulse-alt);
+}
+
+.seekInput::-moz-range-thumb {
+  width: 3px;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: var(--pulse-alt);
+}
+
+.seekInput:focus-visible {
+  outline: 2px solid var(--pulse-alt);
+  outline-offset: 3px;
+}
+
+/* ── Tracks ─────────────────────────────────────────────────────────────── */
+
+.tracks {
+  margin-top: clamp(1.4rem, 3vw, 2.2rem);
+  border-top: 1px solid var(--line);
+}
+
+.trackRow {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr) auto minmax(6rem, 11rem) 3.6rem;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.4rem);
+  width: 100%;
+  padding: 0.7rem 0.55rem;
+  border-bottom: 1px solid var(--line);
+  text-align: start;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.trackRow:hover {
+  background: color-mix(in srgb, var(--pulse-hot) 10%, transparent);
+}
+
+.trackRow:focus-visible {
+  outline: 2px solid var(--pulse-alt);
+  outline-offset: -2px;
+}
+
+.trackN {
+  font-family: var(--data);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+}
+
+.trackTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trackMaqam {
+  font-family: var(--font-almarai), sans-serif;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+.trackWave {
+  width: 100%;
+  height: 24px;
+  opacity: 0.72;
+}
+
+.trackLen {
+  font-family: var(--data);
+  font-size: 0.75rem;
+  color: var(--dim);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.trackRow[data-on] {
+  background: color-mix(in srgb, var(--pulse-hot) 16%, transparent);
+}
+
+.trackRow[data-on] .trackN,
+.trackRow[data-on] .trackLen {
+  color: var(--pulse-alt);
+}
+
+.trackRow[data-on] .trackWave rect {
+  fill: var(--pulse-hot);
+}
+
+.page[data-playing] .trackRow[data-on] .trackWave {
+  animation: breathe var(--beat) ease-in-out infinite alternate;
+}
+
+@keyframes breathe {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ══ HOUSE: THE ARCHIVE ════════════════════════════════════════════════════
+   Right to left, on paper, in the display kufi that Egyptian sleeves and
+   cinema posters were lettered in. Not the same page in amber — a different
+   sheet, laid on the desk. */
+
+.page[data-house="archive"] {
+  --line: #3a2b1c;
+  --dim: #b39a72;
+}
+
+.page[data-house="archive"] .sheet {
+  /* Every neutral is re-derived for paper, so the waveform, the times and the
+     rules do not stay set for a black page they are no longer on. */
+  --ink: #241708;
+  --dim: #6b5230;
+  --line: #c9b184;
+
+  padding: clamp(1.4rem, 3.5vw, 2.8rem);
+  background:
+    repeating-linear-gradient(92deg, rgb(0 0 0 / 0.022) 0 2px, transparent 2px 5px),
+    linear-gradient(178deg, #f3e7cc, #e6d5b2);
+  border: 1px solid #c9b184;
+  box-shadow: 0 30px 70px -40px rgb(0 0 0 / 0.9);
+  color: #241708;
+}
+
+.page[data-house="archive"] .stageFrame {
+  direction: rtl;
+  grid-template-columns: minmax(0, 20rem) minmax(0, 1fr) minmax(0, 13rem);
+  align-items: start;
+}
+
+.page[data-house="archive"] .sleeve {
+  --c-paper: #f6ecd6;
+  --c-ink: #241708;
+}
+
+.page[data-house="archive"] .sleeve figcaption,
+.page[data-house="archive"] .specs dt,
+.page[data-house="archive"] .specs dd {
+  color: #5b4423;
+  font-family: var(--font-almarai), sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.page[data-house="archive"] .specs dd {
+  color: #241708;
+}
+
+.page[data-house="archive"] .eyebrow {
+  font-family: var(--font-almarai), sans-serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #8c3a1e;
+}
+
+.page[data-house="archive"] .live {
+  background: #8c3a1e;
+}
+
+/* Arabic is never letter-spaced and never uppercased. Emphasis is size. */
+.page[data-house="archive"] .artistLine {
+  font-family: var(--font-qahiri), serif;
+  font-weight: 400;
+  font-size: clamp(2.8rem, 9vw, 6.6rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #241708;
+  text-shadow: 0.028em 0.02em 0 color-mix(in srgb, #b8452c 55%, transparent);
+}
+
+.page[data-house="archive"] .albumLine {
+  font-family: var(--font-almarai), sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  line-height: 1.55;
+  color: #7a4a16;
+}
+
+.page[data-house="archive"] .note {
+  max-width: 44ch;
+  font-family: var(--font-almarai), sans-serif;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: #3d2a12;
+}
+
+.page[data-house="archive"] .specs {
+  border-top-color: #c9b184;
+}
+
+.page[data-house="archive"] .scrub {
+  border-top-color: #8c3a1e;
+}
+
+.page[data-house="archive"] .tracks,
+.page[data-house="archive"] .scrub {
+  direction: rtl;
+}
+
+.page[data-house="archive"] .trackRow {
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto minmax(6rem, 10rem) 4.2rem;
+}
+
+.page[data-house="archive"] .trackTitle,
+.page[data-house="archive"] .trackMaqam {
+  font-family: var(--font-almarai), sans-serif;
+}
+
+.page[data-house="archive"] .trackTitle {
+  font-size: 1.0625rem;
+}
+
+/* ── The maqam rule ─────────────────────────────────────────────────────────
+   Replaces the portrait in the archive: the sleeve already prints the singer in
+   its medallion, and what a sleeve cannot show is that the scale is not the
+   piano's. So the archive rules its own intervals, in cents. */
+
+.maqamWrap {
+  --m-ink: #241708;
+  --m-hot: #a5301a;
+  --m-line: #b09367;
+
+  display: none;
+  grid-column: 3;
+  align-self: start;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid #c9b184;
+  background: rgb(255 255 255 / 0.34);
+}
+
+.page[data-house="archive"] .maqamWrap {
+  display: block;
+}
+
+.page[data-house="archive"] .portraitWrap {
+  display: none;
+}
+
+.maqamTitle {
+  margin-bottom: 0.5rem;
+  font-family: var(--font-almarai), sans-serif;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  color: #5b4423;
+}
+
+.maqamRule {
+  width: 100%;
+  height: 88px;
+}
+
+.maqamNote {
+  margin-top: 0.5rem;
+  font-family: var(--font-almarai), sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: #6b5230;
+}
+
+/* ══ HOUSE: THE ROOM ═══════════════════════════════════════════════════════
+   An engineer's document. Mono, monochrome, and the take outranks the name. */
+
+.page[data-house="room"] {
+  --dim: #98a0aa;
+  --line: #262a2f;
+}
+
+.page[data-house="room"] .stageFrame {
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  align-items: start;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.page[data-house="room"] .portraitWrap {
+  display: none;
+}
+
+.page[data-house="room"] .stageTitle {
+  display: flex;
+  flex-direction: column;
+}
+
+.page[data-house="room"] .artistLine {
+  order: 2;
+  font-family: var(--data);
+  font-size: clamp(0.75rem, 1.1vw, 0.875rem);
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  line-height: 1.4;
+  color: var(--dim);
+  text-shadow: none;
+}
+
+.page[data-house="room"] .albumLine {
+  order: 1;
+  margin: 0 0 0.3rem;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 60;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 8vw, 5.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.page[data-house="room"] .sleeve {
+  --c-paper: #101215;
+  --c-ink: #d8dee6;
+}
+
+/* ══ SECTIONS ══════════════════════════════════════════════════════════════ */
+
+.secHead {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 46rem;
+  margin-bottom: clamp(1.4rem, 3.5vw, 2.4rem);
+}
+
+.h2 {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 40;
+  font-weight: 700;
+  font-size: clamp(1.7rem, 4vw, 3rem);
+  line-height: 0.94;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.secHead p {
+  max-width: 58ch;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+/* ── Tonight: five edits, deliberately unequal ──────────────────────────── */
+
+.tonight {
+  position: relative;
+  z-index: 1;
+  padding: clamp(3.5rem, 9vw, 7rem) var(--gutter) 0;
+}
+
+.lists {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(0.7rem, 1.6vw, 1.1rem);
+}
+
+/* Sizes come from the edits themselves, not from a card loop. */
+.lists > li {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 520ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: calc(var(--i) * 70ms);
+}
+
+.lists > li[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.lists > li[data-shape="column"],
+.lists > li[data-shape="arch"] {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.lists > li[data-shape="band"] {
+  grid-column: span 4;
+}
+
+.lists > li[data-shape="grid"],
+.lists > li[data-shape="stack"] {
+  grid-column: span 2;
+}
+
+/* On the two tall edits the plate takes the slack, so the extra height becomes a
+   bigger poster rather than a hole under the copy. */
+li[data-shape="column"] .list,
+li[data-shape="arch"] .list {
+  grid-template-rows: minmax(7rem, 1fr) auto auto auto auto;
+}
+
+li[data-shape="column"] .listPlate,
+li[data-shape="arch"] .listPlate {
+  height: 100%;
+}
+
+.list {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 0.35rem;
+  width: 100%;
+  height: 100%;
+  padding: clamp(0.9rem, 2vw, 1.4rem);
+  background: var(--raise);
+  border: 1px solid var(--line);
+  text-align: start;
+  transition: border-color 200ms ease, transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.list:hover {
+  border-color: var(--l-hot);
+  transform: translateY(-3px);
+}
+
+.list:focus-visible {
+  outline: 2px solid var(--l-hot);
+  outline-offset: 2px;
+}
+
+/* Typographic covers. The albums are illustrated; the edits are lettered, so
+   the two never read as the same kind of object. */
+.listPlate {
+  position: relative;
+  display: block;
+  height: clamp(4.5rem, 9vw, 7rem);
+  margin-bottom: 0.6rem;
+  background: var(--l-hot);
+  overflow: hidden;
+}
+
+.listShape {
+  position: absolute;
+  inset: 0;
+}
+
+li[data-shape="column"] .listShape {
+  background: repeating-linear-gradient(90deg, var(--l-alt) 0 6px, transparent 6px 18px);
+}
+
+li[data-shape="band"] .listShape {
+  background: linear-gradient(170deg, transparent 44%, var(--l-alt) 44% 56%, transparent 56%);
+}
+
+li[data-shape="arch"] .listShape {
+  background: radial-gradient(circle at 50% 118%, var(--l-alt) 0 46%, transparent 46%);
+}
+
+li[data-shape="grid"] .listShape {
+  background:
+    repeating-linear-gradient(0deg, var(--l-alt) 0 2px, transparent 2px 14px),
+    repeating-linear-gradient(90deg, var(--l-alt) 0 2px, transparent 2px 14px);
+  opacity: 0.85;
+}
+
+li[data-shape="stack"] .listShape {
+  background: repeating-linear-gradient(0deg, var(--l-alt) 0 5px, transparent 5px 15px);
+}
+
+.listCount {
+  position: absolute;
+  inset: auto 0.55rem 0.4rem auto;
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0b0a0c;
+}
+
+.listTitle {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 32;
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.4vw, 1.9rem);
+  line-height: 0.98;
+  text-transform: uppercase;
+}
+
+.list[dir="rtl"] .listTitle {
+  font-family: var(--font-qahiri), serif;
+  font-weight: 400;
+  font-size: clamp(1.2rem, 2.4vw, 1.85rem);
+  line-height: 1.3;
+  text-transform: none;
+}
+
+.listBy {
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--l-hot);
+}
+
+.list[dir="rtl"] .listBy,
+.list[dir="rtl"] .listLine {
+  font-family: var(--font-almarai), sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.8125rem;
+  line-height: 1.8;
+}
+
+.listLine {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.listCta {
+  margin-top: 0.7rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--data);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.list[data-on] {
+  border-color: var(--l-hot);
+  box-shadow: inset 0 0 0 1px var(--l-hot);
+}
+
+.list[data-on] .listCta {
+  color: var(--l-hot);
+}
+
+/* ── The roster: a film strip of printed plates ─────────────────────────── */
+
+.roster {
+  position: relative;
+  z-index: 1;
+  padding: clamp(3.5rem, 9vw, 7rem) 0 0;
+}
+
+.roster .secHead {
+  padding: 0 var(--gutter);
+}
+
+.strip {
+  display: flex;
+  gap: clamp(0.7rem, 1.6vw, 1.2rem);
+  padding: 0 var(--gutter) 1.2rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.stripItem {
+  flex: 0 0 clamp(13rem, 21vw, 17rem);
+  scroll-snap-align: start;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.card {
+  --p-paper: #f2ecf6;
+  --p-ink: #14111b;
+  --p-hot: var(--c-hot);
+  --p-alt: var(--c-alt);
+
+  display: grid;
+  width: 100%;
+  text-align: start;
+  background: var(--raise);
+  border: 1px solid var(--line);
+  transition: border-color 220ms ease;
+}
+
+.card:hover {
+  border-color: var(--c-hot);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--c-hot);
+  outline-offset: 2px;
+}
+
+.cardPortrait {
+  width: 100%;
+  height: auto;
+}
+
+.cardBody {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 0.95rem 1rem;
+}
+
+.cardName {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 30;
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cardBody[dir="rtl"] .cardName {
+  font-family: var(--font-qahiri), serif;
+  font-weight: 400;
+  font-size: 1.45rem;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.cardMeta {
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-hot);
+}
+
+.cardBody[dir="rtl"] .cardMeta,
+.cardBody[dir="rtl"] .cardBio {
+  font-family: var(--font-almarai), sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.8125rem;
+  line-height: 1.8;
+}
+
+/* The bio is the disclosure: a portrait alone is a picture; a portrait that
+   answers is a roster entry. */
+.cardBio {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.stripItem[data-open] .cardBio {
+  -webkit-line-clamp: 7;
+}
+
+.cardPlay {
+  padding: 0.6rem 0.95rem;
+  background: var(--raise);
+  border: 1px solid var(--line);
+  border-top: 0;
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: start;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+
+.cardPlay:hover {
+  background: var(--pulse-hot);
+  color: #0b0a0c;
+}
+
+.cardPlay:focus-visible {
+  outline: 2px solid var(--pulse-alt);
+  outline-offset: -2px;
+}
+
+/* ── The catalogue: three racks ─────────────────────────────────────────── */
+
+.catalogue {
+  position: relative;
+  z-index: 1;
+  padding: clamp(3.5rem, 9vw, 7rem) var(--gutter) 0;
+}
+
+.rack {
+  padding-top: 1.6rem;
+  margin-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+
+.rackHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.4rem;
+  margin-bottom: 1.1rem;
+}
+
+.rackName {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 28;
+  font-weight: 700;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.rack[dir="rtl"] .rackName {
+  font-family: var(--font-qahiri), serif;
+  font-weight: 400;
+  font-size: 1.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.rackLine {
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.rack[dir="rtl"] .rackLine {
+  font-family: var(--font-almarai), sans-serif;
+  line-height: 1.9;
+}
+
+.records {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
+  gap: clamp(0.7rem, 1.6vw, 1.2rem);
+}
+
+.records > li {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 460ms ease, transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.records > li[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.record {
+  --c-paper: #0d0b11;
+  --c-ink: #efe9f7;
+
+  display: grid;
+  gap: 0.15rem;
+  width: 100%;
+  text-align: start;
+}
+
+.rack[data-rack="archive"] .record {
+  --c-paper: #f6ecd6;
+  --c-ink: #241708;
+}
+
+.rack[data-rack="room"] .record {
+  --c-paper: #101215;
+  --c-ink: #d8dee6;
+}
+
+.recordArt {
+  position: relative;
+  display: block;
+  margin-bottom: 0.55rem;
+  overflow: hidden;
+}
+
+.recordCover {
+  width: 100%;
+  aspect-ratio: 1;
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.record:hover .recordCover {
+  transform: scale(1.035);
+}
+
+.recordBadge {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 0.4rem 0.6rem;
+  background: var(--c-hot);
+  color: #0b0a0c;
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: translateY(100%);
+  transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.record:hover .recordBadge,
+.record:focus-visible .recordBadge,
+.record[data-on] .recordBadge {
+  transform: none;
+}
+
+.record:focus-visible {
+  outline: 2px solid var(--c-hot);
+  outline-offset: 3px;
+}
+
+.recordCat {
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-hot);
+}
+
+.recordArtist {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 24;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.rack[dir="rtl"] .recordArtist {
+  font-family: var(--font-qahiri), serif;
+  font-weight: 400;
+  font-size: 1.3rem;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.recordTitle {
+  font-size: 0.9375rem;
+  color: color-mix(in srgb, var(--ink) 82%, var(--ground));
+}
+
+.rack[dir="rtl"] .recordTitle,
+.rack[dir="rtl"] .recordMeta {
+  font-family: var(--font-almarai), sans-serif;
+}
+
+.recordMeta {
+  font-family: var(--data);
+  font-size: 0.625rem;
+  color: var(--dim);
+}
+
+.record[data-on] .recordCat {
+  color: var(--pulse-alt);
+}
+
+/* ── Sessions ───────────────────────────────────────────────────────────── */
+
+.sessions {
+  position: relative;
+  z-index: 1;
+  padding: clamp(3.5rem, 9vw, 7rem) var(--gutter) 0;
+}
+
+.sessionList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  gap: clamp(0.9rem, 2vw, 1.6rem);
+}
+
+.session {
+  padding: clamp(1.1rem, 2.5vw, 1.8rem);
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--raise), transparent);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 460ms ease, transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.session[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.sessCat {
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pulse-hot);
+}
+
+.sessTitle {
+  margin: 0.3rem 0 1rem;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 36;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.sessSpecs {
+  display: grid;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+}
+
+.sessSpecs > div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.sessSpecs dt {
+  padding-top: 0.15rem;
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.sessSpecs dd {
+  font-family: var(--data);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.sessPlay {
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--pulse-hot);
+  color: var(--pulse-hot);
+  font-family: var(--data);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.sessPlay:hover {
+  background: var(--pulse-hot);
+  color: #0b0a0c;
+}
+
+.sessPlay:focus-visible {
+  outline: 2px solid var(--pulse-alt);
+  outline-offset: 2px;
+}
+
+/* ── Radio ──────────────────────────────────────────────────────────────── */
+
+.radioBand {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(3.5rem, 9vw, 7rem);
+  padding: clamp(2.4rem, 6vw, 4.5rem) var(--gutter);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--pulse-hot) 12%, transparent),
+    transparent 58%
+  );
+}
+
+.onAir {
+  display: flex;
+  align-items: center;
+  gap: 0.6ch;
+  font-family: var(--data);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pulse-hot);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pulse-hot);
+  animation: blip calc(var(--beat) * 2) ease-out infinite;
+}
+
+.radioTitle {
+  max-width: 24ch;
+  margin: 0.8rem 0 0.9rem;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 60;
+  font-weight: 700;
+  font-size: clamp(2rem, 6vw, 4.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+.radioNote {
+  max-width: 54ch;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.radioNext {
+  margin-top: 1rem;
+  font-family: var(--data);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--pulse-alt);
+}
+
+/* ── Foot ───────────────────────────────────────────────────────────────── */
+
+.foot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.8rem;
+  padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) 0;
+  font-family: var(--data);
+  font-size: 0.6875rem;
+  line-height: 1.7;
+  color: var(--dim);
+}
+
+.foot p:first-child {
+  max-width: 78ch;
+}
+
+/* ══ THE CONSOLE ═══════════════════════════════════════════════════════════
+   A floating desk, not a full-width bar — and lifted clear of the escape
+   control, which owns the bottom-left corner of every world. */
+
+.dock {
+  position: fixed;
+  z-index: 700;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: calc(3.2rem + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) auto minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: clamp(0.7rem, 2vw, 1.6rem);
+  height: var(--console-h);
+  padding: 0 clamp(0.7rem, 2vw, 1.2rem);
+  background: color-mix(in srgb, #0b0a0c 92%, transparent);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--pulse-hot);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 26px 50px -30px rgb(0 0 0 / 0.95);
+}
+
+.dockNow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.dockArt {
+  --c-paper: #0d0b11;
+  --c-ink: #efe9f7;
+  --c-hot: var(--pulse-hot);
+  --c-alt: var(--pulse-alt);
+  flex: 0 0 auto;
+  width: 2.9rem;
+  height: 2.9rem;
+}
+
+.dockText {
+  display: grid;
+  min-width: 0;
+}
+
+.dockText b {
+  font-size: 0.875rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dockText span {
+  font-family: var(--data);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dockText[dir="rtl"] b {
+  font-family: var(--font-almarai), sans-serif;
+}
+
+.dockTransport {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.dockSkip,
+.dockPlay {
+  display: grid;
+  place-items: center;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.dockSkip {
+  width: 2rem;
+  height: 2rem;
+  color: var(--dim);
+}
+
+.dockSkip:hover {
+  color: var(--ink);
+}
+
+.dockPlay {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--pulse-hot);
+  color: #0b0a0c;
+}
+
+.dockPlay:hover {
+  background: var(--pulse-alt);
+}
+
+.dockSkip:focus-visible,
+.dockPlay:focus-visible,
+.dockVol input:focus-visible {
+  outline: 2px solid var(--pulse-alt);
+  outline-offset: 2px;
+}
+
+.dockSeek {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.dockWave {
+  width: 100%;
+  height: 26px;
+}
+
+.dockTime {
+  font-family: var(--data);
+  font-size: 0.625rem;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.dockVol {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--dim);
+}
+
+.dockVol input {
+  width: 5rem;
+  height: 2px;
+  appearance: none;
+  background: var(--line);
+  cursor: pointer;
+}
+
+.dockVol input::-webkit-slider-thumb {
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--pulse-alt);
+}
+
+.dockVol input::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--pulse-alt);
+}
+
+.dockQueue {
+  display: grid;
+  gap: 0.1rem;
+  font-family: var(--data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: end;
+}
+
+.dockQueue b {
+  max-width: 15ch;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dockMeter {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 1.6rem;
+}
+
+.dockMeter i {
+  width: 3px;
+  height: 20%;
+  background: color-mix(in srgb, var(--pulse-alt) 70%, transparent);
+}
+
+.page[data-playing] .dockMeter i {
+  animation: level calc(var(--beat) / 2) steps(3, jump-none) infinite alternate;
+  animation-delay: calc(var(--i) * var(--beat) / -7);
+}
+
+.reducedNote {
+  position: relative;
+  z-index: 1;
+  padding: 1.4rem var(--gutter) 0;
+  font-family: var(--data);
+  font-size: 0.6875rem;
+  color: var(--dim);
+}
+
+/* ══ RESPONSIVE ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1180px) {
+  .stageFrame {
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+  }
+
+  .portraitWrap {
+    grid-column: 1;
+    grid-row: 2;
+    max-width: 17rem;
+  }
+
+  .page[data-house="archive"] .stageFrame {
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+  }
+
+  .page[data-house="archive"] .maqamWrap {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .lists {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .lists > li[data-shape="band"] {
+    grid-column: span 4;
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    --console-h: 6.6rem;
+  }
+
+  .desk {
+    grid-template-columns: auto 1fr;
+    row-gap: 0.6rem;
+  }
+
+  .tape {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: start;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .setIn {
+    justify-self: end;
+  }
+
+  .dock {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto;
+    height: auto;
+    row-gap: 0.5rem;
+    padding: 0.6rem clamp(0.7rem, 2vw, 1.2rem) 0.7rem;
+  }
+
+  .dockSeek {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .dockQueue,
+  .dockMeter {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .stageFrame,
+  .page[data-house="archive"] .stageFrame,
+  .page[data-house="room"] .stageFrame {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* One column means one column: without this the `grid-column: 2` and `3` from
+     the desktop composition open two implicit tracks and crush the sleeve. */
+  .sleeve,
+  .stageText,
+  .portraitWrap,
+  .maqamWrap,
+  .page[data-house="archive"] .maqamWrap {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .sleeve {
+    max-width: 15rem;
+  }
+
+  .portraitWrap {
+    justify-self: end;
+    max-width: 12rem;
+    margin-top: -4rem;
+  }
+
+  .scrub {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scrubTime {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .seek {
+    grid-row: 3;
+  }
+
+  .trackRow,
+  .page[data-house="archive"] .trackRow {
+    grid-template-columns: 2.6rem minmax(0, 1fr) 3.6rem;
+  }
+
+  .trackWave,
+  .trackMaqam {
+    display: none;
+  }
+
+  .lists {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lists > li,
+  .lists > li[data-shape="band"],
+  .lists > li[data-shape="column"],
+  .lists > li[data-shape="arch"],
+  .lists > li[data-shape="grid"],
+  .lists > li[data-shape="stack"] {
+    grid-column: span 1;
+    grid-row: auto;
+  }
+
+  .dockVol {
+    display: none;
+  }
+
+  .sessSpecs > div {
+    grid-template-columns: 4.2rem minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 460px) {
+  .mark {
+    font-size: 1.2rem;
+  }
+
+  .setIn {
+    display: none;
+  }
+
+  .dockText b {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Reduced motion: the composition is already complete without any of it, so the
+   entrance resolves immediately rather than being frozen halfway. */
+@media (prefers-reduced-motion: reduce) {
+  .sleeve,
+  .portraitWrap,
+  .lists > li,
+  .records > li,
+  .session {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

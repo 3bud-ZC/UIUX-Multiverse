@@ -1,0 +1,1002 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   10 — MERCATO · provisions and table goods
+
+   A shop, and shops have their own grammar: a persistent header carrying the
+   basket, a filter column that stays put, a catalogue grid sized to compare
+   things, a product page and a drawer. The product grid here is a grid because
+   goods are genuinely comparable — that is the one place a repeated cell is the
+   right answer. Motion is 180ms: commerce should feel quick, not cinematic.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.shop {
+  --oat: #ece8dc;
+  --oat2: #e3dece;
+  --card: #f6f3ea;
+  --ink: #1c1b17;
+  --dim: #57544a;
+  --line: #d2cdbe;
+  --green: #2f5d3f;
+  --rust: #9a4a24;
+
+  --display: var(--font-fraunces), Georgia, serif;
+  --body: var(--font-karla), system-ui, sans-serif;
+  --quick: 180ms cubic-bezier(0.3, 0, 0.2, 1);
+  --pad: clamp(1rem, 3vw, 2.75rem);
+
+  min-height: 100dvh;
+  background: var(--oat);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.shop :focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.head {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.7rem var(--pad);
+  background: var(--oat);
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 96, "SOFT" 30;
+  font-weight: 600;
+  font-size: 1.375rem;
+  letter-spacing: -0.03em;
+}
+
+.headNav {
+  display: flex;
+  gap: 1.1rem;
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.headNav button {
+  padding-bottom: 2px;
+  border-bottom: 1.5px solid transparent;
+  transition: color var(--quick), border-color var(--quick);
+}
+
+.headNav button:hover,
+.headNav button[data-on] {
+  color: var(--ink);
+  border-bottom-color: var(--green);
+}
+
+.ship {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+.cartButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border: 1.5px solid var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  transition: background-color var(--quick), color var(--quick);
+}
+
+.cartButton:hover {
+  background: var(--ink);
+  color: var(--oat);
+}
+
+.count {
+  min-width: 1.35rem;
+  padding: 0 0.3rem;
+  text-align: center;
+  background: var(--line);
+  font-variant-numeric: tabular-nums;
+}
+
+.count[data-full] {
+  background: var(--green);
+  color: var(--card);
+}
+
+.cartButton:hover .count {
+  color: var(--card);
+}
+
+/* ── Intro ──────────────────────────────────────────────────────────────── */
+
+.intro {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.5rem, 5vh, 3.5rem) var(--pad) clamp(1.25rem, 3vh, 2rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.h1 {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 96, "SOFT" 40;
+  font-weight: 500;
+  font-size: clamp(2.2rem, 6vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  max-width: 16ch;
+}
+
+.h1 em {
+  font-style: italic;
+  color: var(--green);
+}
+
+.introText {
+  max-width: 52ch;
+  color: var(--dim);
+}
+
+.introMeta {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 0.25rem;
+}
+
+.introMeta dt {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.introMeta dd {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 24;
+  font-size: 1.125rem;
+}
+
+/* ── Body: filters + catalogue ──────────────────────────────────────────── */
+
+.body {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  padding: clamp(1.25rem, 4vh, 2.5rem) var(--pad) clamp(2rem, 6vh, 4rem);
+  align-items: start;
+}
+
+.filters {
+  position: sticky;
+  top: 4rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.filterGroup {
+  display: grid;
+  gap: 1px;
+}
+
+.filterLabel {
+  padding-bottom: 0.4rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 0.35rem;
+}
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.3rem 0.4rem;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--dim);
+  transition: background-color var(--quick), color var(--quick);
+}
+
+.filter:hover {
+  background: var(--oat2);
+  color: var(--ink);
+}
+
+.filter[data-on] {
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: inset 2px 0 0 var(--green);
+}
+
+.filter span {
+  font-variant-numeric: tabular-nums;
+  color: var(--dim);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.check input {
+  accent-color: var(--green);
+  width: 1rem;
+  height: 1rem;
+}
+
+.filterNote {
+  font-size: 0.75rem;
+  color: var(--dim);
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.catalogueHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.h2 {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 60, "SOFT" 30;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  letter-spacing: -0.03em;
+}
+
+.sortNote {
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+/* ── Grid ───────────────────────────────────────────────────────────────── */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1px;
+  margin-top: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.product {
+  display: grid;
+  background: var(--card);
+  transition: background-color var(--quick);
+}
+
+.product:hover {
+  background: #fbf9f2;
+}
+
+.productMain {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem 0.85rem 0.5rem;
+  text-align: left;
+}
+
+.plate {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background-size: cover;
+  margin-bottom: 0.6rem;
+}
+
+.flag {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 0.15rem 0.45rem;
+  background: var(--rust);
+  color: #fff;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.productMaker {
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.productName {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 24, "SOFT" 30;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+}
+
+.productMeta {
+  margin-top: 0.15rem;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.productMeta i {
+  font-style: normal;
+  color: var(--dim);
+}
+
+.add {
+  margin: 0 0.85rem 0.85rem;
+  padding: 0.45rem;
+  border: 1.5px solid var(--ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background-color var(--quick), color var(--quick);
+}
+
+.add:hover {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--card);
+}
+
+.empty {
+  padding: 3rem 0;
+  max-width: 40ch;
+  color: var(--dim);
+}
+
+/* ── Product page ───────────────────────────────────────────────────────── */
+
+.back {
+  font-size: 0.8125rem;
+  color: var(--dim);
+  margin-bottom: 1rem;
+}
+
+.back:hover {
+  color: var(--ink);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.detailPlate {
+  aspect-ratio: 4 / 5;
+  background-size: cover;
+}
+
+.maker {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.detailName {
+  margin-top: 0.5rem;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 96, "SOFT" 40;
+  font-weight: 500;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.detailPrice {
+  margin-top: 0.75rem;
+  font-size: 1.375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.detailPrice span {
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.detailNote {
+  margin-top: 1rem;
+  max-width: 52ch;
+  color: var(--dim);
+}
+
+.stock {
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  color: var(--green);
+}
+
+.stock[data-low] {
+  color: var(--rust);
+}
+
+.addBig {
+  margin-top: 1rem;
+  padding: 0.9rem 1.6rem;
+  background: var(--green);
+  color: var(--card);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  transition: background-color var(--quick);
+}
+
+.addBig:hover {
+  background: #244a31;
+}
+
+.detailSpec {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1.75rem;
+}
+
+.detailSpec div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+
+.detailSpec dt {
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  align-self: center;
+}
+
+/* ── Editorial band + footer ────────────────────────────────────────────── */
+
+.makers {
+  display: grid;
+  gap: 0.75rem;
+  padding: clamp(2rem, 6vh, 3.5rem) var(--pad);
+  border-top: 1px solid var(--line);
+  background: var(--oat2);
+}
+
+.makersText {
+  max-width: 60ch;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 20, "SOFT" 30;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem var(--pad) 4.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── Basket drawer ──────────────────────────────────────────────────────── */
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  width: min(24rem, 100vw);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.1rem 1.5rem;
+  background: var(--card);
+  border-left: 1px solid var(--line);
+  transform: translateX(101%);
+  visibility: hidden;
+  transition: transform var(--quick), visibility var(--quick);
+  overflow-y: auto;
+}
+
+.shop[data-drawer] .drawer {
+  transform: none;
+  visibility: visible;
+}
+
+.drawerHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--display);
+  font-variation-settings: "opsz" 24;
+  font-size: 1.125rem;
+}
+
+.drawerEmpty {
+  padding-top: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.lines {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem 0;
+}
+
+.lines li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr) auto auto;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.linePlate {
+  width: 2.6rem;
+  aspect-ratio: 4 / 5;
+  background-size: cover;
+}
+
+.lineName {
+  display: block;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 18;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+}
+
+.lineUnit {
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--line);
+  padding: 0.15rem 0.35rem;
+}
+
+.qty button {
+  width: 1.25rem;
+  text-align: center;
+  color: var(--dim);
+}
+
+.qty button:hover {
+  color: var(--ink);
+}
+
+.qty b {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.875rem;
+}
+
+.linePrice {
+  min-width: 3.6rem;
+  text-align: right;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.totals {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.grand {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--display);
+  font-size: 1.125rem;
+  color: var(--ink) !important;
+}
+
+.nudge {
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  background: var(--oat2);
+  font-size: 0.8125rem;
+  color: var(--rust);
+}
+
+.checkout {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  background: var(--ink);
+  color: var(--card);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  transition: background-color var(--quick);
+}
+
+.checkout:hover {
+  background: var(--green);
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgb(28 27 23 / 0.32);
+  cursor: default;
+}
+
+/* ── Phone: filters become a rail, the drawer becomes a sheet ───────────── */
+
+@media (max-width: 860px) {
+  .headNav,
+  .ship {
+    display: none;
+  }
+
+  .cartButton {
+    margin-left: auto;
+  }
+
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .filters {
+    position: static;
+    grid-auto-flow: row;
+    gap: 0.75rem;
+  }
+
+  .filterGroup {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .filterLabel {
+    display: none;
+  }
+
+  .filter {
+    flex: none;
+    padding: 0.6rem 0.95rem;
+    border: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  .filter[data-on] {
+    box-shadow: none;
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--card);
+  }
+
+  .filter[data-on] span {
+    color: var(--card);
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detailGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* On a phone the basket comes up from the bottom, which is where the thumb
+     already is, and stops short of the top so the catalogue stays in view. */
+  .drawer {
+    top: auto;
+    left: 0;
+    width: auto;
+    max-height: 82svh;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    transform: translateY(101%);
+  }
+
+  .detailSpec div {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+  }
+}
+
+/* ── The goods ──────────────────────────────────────────────────────────────
+   Each item is drawn rather than tinted. The plate behind it is a shop shelf:
+   a warm ground, a soft top light and a hairline, so nine different silhouettes
+   still read as one window display. */
+
+.plate,
+.detailPlate,
+.linePlate {
+  display: grid;
+  place-items: center;
+  background-image:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 252, 244, 0.9), transparent 62%),
+    linear-gradient(180deg, #e6e1d3 0%, #d8d2c1 100%);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.art {
+  display: block;
+  width: 78%;
+  height: auto;
+  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.product:hover .art {
+  transform: translateY(-4px) scale(1.03);
+}
+
+.detailArt {
+  width: 62%;
+}
+
+.linePlate .art {
+  width: 74%;
+}
+
+.artShadow {
+  fill: #6b6151;
+  opacity: 0.2;
+}
+
+.artBody {
+  fill: var(--g2);
+  stroke: var(--g3);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.artBodyAlt {
+  fill: var(--g1);
+  stroke: var(--g3);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.artCap,
+.artWax,
+.artRoll {
+  fill: var(--g3);
+  stroke: var(--g3);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.artCollar {
+  stroke: var(--g3);
+  stroke-width: 4;
+  fill: none;
+}
+
+.artRim {
+  fill: var(--g1);
+  stroke: var(--g3);
+  stroke-width: 2.5;
+}
+
+.artWell {
+  fill: var(--g2);
+  opacity: 0.55;
+}
+
+.artHeap {
+  fill: var(--g1);
+  stroke: var(--g3);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.artFlake {
+  fill: #fff;
+  opacity: 0.9;
+}
+
+.artThrow,
+.artFold,
+.artStitch {
+  fill: none;
+  stroke: var(--g3);
+  stroke-width: 2;
+  opacity: 0.55;
+}
+
+.artStitch {
+  stroke-dasharray: 5 4;
+}
+
+.artSpout,
+.artHandle {
+  fill: var(--g3);
+  stroke: var(--g3);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.artHandle {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.artValve {
+  fill: var(--g3);
+}
+
+.artLabel {
+  fill: #f6f2e6;
+  stroke: var(--g3);
+  stroke-width: 1.5;
+}
+
+.artLabelRule {
+  stroke: var(--g3);
+  stroke-width: 2;
+  opacity: 0.4;
+  fill: none;
+}
+
+.artGleam {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: 0.3;
+}
+
+/* The clone that flies into the basket. The drawing carries the class with it
+   when it is cloned, so the flight can be styled without a global selector. */
+.art[data-flight] {
+  filter: drop-shadow(0 12px 18px rgba(60, 50, 30, 0.35));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art,
+  .product:hover .art {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ══ Life, without clutter ═════════════════════════════════════════════════
+   Three additions, and each one is information rather than motion: what went in
+   the basket and how to take it back, how many are actually left, and who made
+   the thing. Nothing here animates on its own. */
+
+.added {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 var(--pad) 0.75rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--green);
+  background: color-mix(in srgb, var(--green) 7%, transparent);
+  font-size: 0.875rem;
+  animation: addedIn 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes addedIn {
+  from {
+    opacity: 0;
+    transform: translateY(-0.4rem);
+  }
+}
+
+.added b {
+  font-weight: 600;
+}
+
+.added button {
+  margin-left: auto;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line);
+  font-size: 0.8125rem;
+  color: var(--ink);
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.added button:hover {
+  border-color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+/* Sold out is a different state from low, and it looks like one. */
+.flag[data-out] {
+  background: var(--ink);
+  color: var(--oat);
+}
+
+.stock[data-out] {
+  color: var(--ink);
+  text-decoration: line-through;
+}
+
+.addBig:disabled {
+  background: var(--line);
+  color: var(--dim);
+  cursor: not-allowed;
+}
+
+/* ── The maker ──────────────────────────────────────────────────────────── */
+
+.makerBlock {
+  margin-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+.makerToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.7rem 0;
+  font-family: var(--body);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  transition: color 180ms ease;
+}
+
+.makerToggle:hover {
+  color: var(--ink);
+}
+
+.makerBody {
+  display: grid;
+  gap: 0.4rem;
+  padding-bottom: 0.9rem;
+  max-width: 46ch;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  animation: makerIn 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes makerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-0.3rem);
+  }
+}
+
+.makerSince {
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .added,
+  .makerBody {
+    animation: none;
+  }
+}

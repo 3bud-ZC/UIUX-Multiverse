@@ -1,0 +1,797 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   05 — ORBIT · Deep Field
+
+   Cinematic and spatial. There is no column grid here: elements are placed in
+   z-layers over a depth field and move against each other on the pointer, and
+   the HUD is anchored to the corners of the frame rather than to a page. Type
+   is wide and set in caps at title scale; everything else is squared technical
+   text. Motion is long — 1.1s expo — because distance is the subject.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.game {
+  --void: #060609;
+  --deep: #0f0e18;
+  --panel: #14122154;
+  --ink: #eae7fb;
+  --dim: #a099c9;
+  --line: #241f3c;
+  --violet: #7c5cff;
+  --ember: #ff6b35;
+
+  --display: var(--font-unbounded), system-ui, sans-serif;
+  --body: var(--font-chakra), system-ui, sans-serif;
+  --far: 1100ms cubic-bezier(0.19, 1, 0.22, 1);
+  --pad: clamp(1rem, 4vw, 4rem);
+  --px: 0;
+  --py: 0;
+
+  min-height: 100dvh;
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.game :focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+}
+
+/* ── Title scene ────────────────────────────────────────────────────────── */
+
+.scene {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  align-content: end;
+  padding: var(--pad) var(--pad) clamp(3rem, 10vh, 6rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ── The stage ──────────────────────────────────────────────────────────────
+   One canvas, and everything that moves in the scene is inside it: the star
+   field, the wrecks, the ship and its plumes. The vector ship that used to live
+   here was a flat arrangement of rounded rectangles; a spacecraft needs
+   silhouette, perspective and light across its plating, so it is a mesh now.
+   See `ship.ts` and `ShipCanvas.tsx`. */
+
+.stage {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+
+.hud {
+  position: absolute;
+  inset: var(--pad);
+  pointer-events: none;
+  font-family: var(--body);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  color: var(--dim);
+}
+
+.hudTL,
+.hudTR,
+.hudBL,
+.hudBR {
+  position: absolute;
+  padding: 0.25rem 0.5rem;
+  border-top: 1px solid var(--violet);
+}
+
+.hudTL {
+  top: 0;
+  left: 0;
+  border-left: 1px solid var(--violet);
+}
+
+.hudTR {
+  top: 0;
+  right: 0;
+  border-right: 1px solid var(--violet);
+}
+
+.hudBL {
+  bottom: 0;
+  left: 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--violet);
+  border-left: 1px solid var(--violet);
+}
+
+.hudBR {
+  bottom: 0;
+  right: 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--violet);
+  border-right: 1px solid var(--violet);
+}
+
+.titleBlock {
+  position: relative;
+  max-width: 46rem;
+  transform: translate3d(calc(var(--px) * -12px), calc(var(--py) * -8px), 0);
+}
+
+.studio {
+  font-size: 0.625rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.title {
+  margin-top: 1rem;
+  display: grid;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 9vw, 8rem);
+  line-height: 0.86;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.title span {
+  padding-left: 0.14em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ink);
+}
+
+.tagline {
+  margin-top: 1.5rem;
+  max-width: 40ch;
+  font-size: 1rem;
+  color: var(--dim);
+}
+
+.cta {
+  justify-self: start;
+  display: inline-block;
+  margin-top: 1.75rem;
+  padding: 0.8rem 1.9rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: var(--violet);
+  clip-path: polygon(0 0, 100% 0, 100% 72%, calc(100% - 0.7rem) 100%, 0 100%);
+  transition: background-color var(--far), transform var(--far);
+}
+
+.cta:hover {
+  background: var(--ember);
+  transform: translateY(-2px);
+}
+
+/* ── Contract board ─────────────────────────────────────────────────────── */
+
+.sectors,
+.contracts,
+.loadout,
+.lore {
+  padding: clamp(2.5rem, 9vh, 6rem) var(--pad);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.sectionNote {
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin-top: 1.75rem;
+}
+
+.contractList {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.contract {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  gap: 0.15rem 1rem;
+  padding: 0.9rem 1rem;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: linear-gradient(120deg, #0d0c17, #0a0912);
+  transition: border-color var(--far), transform var(--far), background-color var(--far);
+}
+
+.contract:hover {
+  border-color: #3b3268;
+  transform: translateX(4px);
+}
+
+.contract[data-on] {
+  border-color: var(--violet);
+  background: linear-gradient(120deg, #171334, #0b0a16);
+}
+
+.contractId {
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--violet);
+}
+
+.contractName {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.contractSector {
+  grid-column: 2;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+}
+
+.hazard {
+  grid-row: 1 / span 2;
+  align-self: center;
+  display: flex;
+  gap: 3px;
+}
+
+.hazard i {
+  width: 4px;
+  height: 14px;
+  background: #2a2545;
+  transform: skewX(-18deg);
+}
+
+.hazard i[data-on] {
+  background: var(--ember);
+}
+
+.brief {
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, #100e1d, #08070f);
+  animation: settle var(--far) both;
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+}
+
+.briefId {
+  font-size: 0.625rem;
+  letter-spacing: 0.24em;
+  color: var(--violet);
+}
+
+.briefName {
+  margin-top: 0.5rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.25rem, 2.4vw, 1.9rem);
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.briefText {
+  margin-top: 1rem;
+  max-width: 48ch;
+  color: #cfc9ee;
+}
+
+.hazardList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1.25rem;
+}
+
+.hazardList li {
+  padding: 0.2rem 0.6rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ember);
+  border: 1px solid #40281c;
+}
+
+.briefMeta {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.briefMeta dt {
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.briefMeta dd {
+  margin-top: 0.25rem;
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  letter-spacing: -0.04em;
+}
+
+.briefMeta dd[data-high] {
+  color: var(--ember);
+}
+
+/* ── Loadout ────────────────────────────────────────────────────────────── */
+
+.bay {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin-top: 1.75rem;
+}
+
+.modules {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.module {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1rem;
+  padding: 0.7rem 2.2rem 0.75rem 0.9rem;
+  text-align: left;
+  border: 1px solid var(--line);
+  transition: border-color var(--far), background-color var(--far);
+}
+
+.module:hover {
+  border-color: #3b3268;
+}
+
+.module[data-on] {
+  border-color: var(--violet);
+  background: #15122b;
+}
+
+.moduleName {
+  grid-column: 1;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.moduleNote {
+  grid-column: 1;
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+.moduleStats {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+}
+
+.moduleStats b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.readout {
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  background: #0b0a14;
+  align-self: start;
+}
+
+.readoutLabel {
+  font-size: 0.5625rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.gauge {
+  margin-top: 0.6rem;
+  height: 10px;
+  border: 1px solid var(--line);
+  background: #100e1c;
+}
+
+.gauge span {
+  display: block;
+  height: 100%;
+  background: var(--violet);
+  transition: width var(--far);
+}
+
+.gauge[data-over] span {
+  background: var(--ember);
+}
+
+.readoutValue {
+  margin-top: 0.4rem;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  letter-spacing: -0.05em;
+}
+
+.readoutValue[data-over] {
+  color: var(--ember);
+}
+
+.readoutRows {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.readoutRows div {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.8125rem;
+}
+
+.readoutRows dt {
+  color: var(--dim);
+}
+
+.readoutRows dd[data-bad] {
+  color: var(--ember);
+}
+
+.launch {
+  flex: 1 1 11rem;
+  padding: 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: var(--ink);
+  clip-path: polygon(0 0, 100% 0, 100% 68%, calc(100% - 0.8rem) 100%, 0 100%);
+  transition: background-color var(--far);
+}
+
+.launch:hover:not(:disabled) {
+  background: var(--violet);
+  color: var(--ink);
+}
+
+.launch:disabled {
+  background: #221f36;
+  color: #6b648f;
+  cursor: not-allowed;
+}
+
+.launchNote {
+  margin-top: 0.75rem;
+  min-height: 2.4em;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+/* ── Lore ───────────────────────────────────────────────────────────────── */
+
+.lore {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  border-top: 1px solid var(--line);
+  background:
+    radial-gradient(80% 120% at 12% 0%, #140f2c 0%, transparent 60%), var(--void);
+}
+
+.loreText {
+  display: grid;
+  gap: 1rem;
+  max-width: 58ch;
+  color: #cfc9ee;
+}
+
+.release {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: clamp(2rem, 6vh, 3.5rem) var(--pad) 5rem;
+  border-top: 1px solid var(--line);
+}
+
+.releaseDate {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 5vw, 3.4rem);
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.releasePlatforms {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.colophon {
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6b648f;
+}
+
+/* ── Touch: the parallax stops, the layout stacks, targets grow ─────────── */
+
+@media (max-width: 900px) {
+  .board,
+  .bay,
+  .lore {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sectionHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .contract {
+    padding: 1rem;
+  }
+
+  .hudTR,
+  .hudBR {
+    display: none;
+  }
+
+  .launch,
+  .cta {
+    padding-block: 1rem;
+  }
+}
+
+@media (hover: none) {
+  /* Without a pointer there is no parallax to drive, so the scene is composed
+     as a still: the ship sits where the art director put it. */
+  .horizon,
+  .titleBlock {
+    transform: none;
+  }
+}
+
+
+/* ── Title actions ──────────────────────────────────────────────────────── */
+
+.titleActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.9rem 1.4rem;
+  margin-top: 1.6rem;
+}
+
+/* What is bolted on, said in the hero, because the hero is where you see it. */
+.fittedLine {
+  max-width: 30ch;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── The reticle: the HUD's one moving part, and it names the launch state ── */
+
+.reticle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6.5rem;
+  height: 6.5rem;
+  margin: -3.25rem 0 0 -3.25rem;
+  border: 1px solid color-mix(in srgb, var(--violet) 46%, transparent);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(1.35) translate3d(calc(var(--px) * 30px), calc(var(--py) * 18px), 0);
+  transition: opacity var(--far), transform var(--far), border-color var(--far);
+}
+
+.reticle::before,
+.reticle::after {
+  content: "";
+  position: absolute;
+  inset: 42% -0.9rem;
+  border-top: 1px solid currentColor;
+  color: inherit;
+}
+
+.reticle::after {
+  inset: -0.9rem 42%;
+  border-top: 0;
+  border-left: 1px solid color-mix(in srgb, var(--violet) 46%, transparent);
+}
+
+.reticle[data-phase="counting"],
+.reticle[data-phase="ignition"] {
+  opacity: 1;
+  transform: scale(1) translate3d(calc(var(--px) * 30px), calc(var(--py) * 18px), 0);
+}
+
+.reticle[data-phase="ignition"] {
+  border-color: var(--ember);
+}
+
+/* ── Sectors ────────────────────────────────────────────────────────────── */
+
+.sectorList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: clamp(0.6rem, 1.6vw, 1rem);
+}
+
+.sector {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  width: 100%;
+  height: 100%;
+  padding: clamp(0.9rem, 2vw, 1.3rem);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  text-align: start;
+  transition: border-color var(--far), background-color var(--far), transform var(--far);
+}
+
+.sector:hover {
+  border-color: color-mix(in srgb, var(--violet) 60%, transparent);
+  transform: translateY(-2px);
+}
+
+.sector[data-on] {
+  border-color: var(--violet);
+  background: color-mix(in srgb, var(--violet) 15%, transparent);
+}
+
+.sectorCode {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  color: var(--violet);
+}
+
+.sectorName {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+.sectorNote {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.sectorMeta {
+  margin-top: 0.3rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8d86b6;
+}
+
+/* ── Briefing advice: the one line that links the board to the bay ─────── */
+
+.advice {
+  margin-top: 1rem;
+  padding: 0.55rem 0.8rem;
+  border-left: 2px solid var(--ember);
+  background: color-mix(in srgb, var(--ember) 10%, transparent);
+  font-size: 0.8125rem;
+  color: #f0c8b4;
+}
+
+.advice[data-met] {
+  border-left-color: var(--violet);
+  background: color-mix(in srgb, var(--violet) 12%, transparent);
+  color: #cfc6ff;
+}
+
+/* ── Bay additions ──────────────────────────────────────────────────────── */
+
+/* Each module says what it physically bolts on, because that is the promise the
+   hero then keeps. */
+.moduleFits {
+  grid-column: 1;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--violet) 70%, #ffffff);
+}
+
+.module[data-advised]::after {
+  content: "Advised";
+  position: absolute;
+  inset: 0.6rem 0.7rem auto auto;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+.launchRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.abort {
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--line);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  transition: color var(--far), border-color var(--far);
+}
+
+.abort:hover {
+  color: var(--ink);
+  border-color: var(--ember);
+}
+
+.reducedNote {
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  color: #8d86b6;
+}

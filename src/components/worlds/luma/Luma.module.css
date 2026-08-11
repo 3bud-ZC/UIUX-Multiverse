@@ -1,0 +1,1431 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   07 — LUMA · consumer mobile app
+
+   The subject is the product, so the product is the largest object on every
+   screen. Geometry is round where a finger touches it and square where the
+   page is a page; colour is warm daylight against one indigo; type is a
+   rounded geometric over a humanist app face. Motion is a 480ms spring —
+   the only world here that overshoots on purpose.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.site {
+  --cream: #fdf1ea;
+  --cream2: #fbe6da;
+  --ink: #241a2e;
+  --dim: #655471;
+  --line: #eddbd2;
+  --indigo: #5b3df5;
+  --ember: #e2653a;
+  --white: #fffdfc;
+
+  --display: var(--font-outfit), system-ui, sans-serif;
+  --body: var(--font-jakarta), system-ui, sans-serif;
+  --spring: 480ms cubic-bezier(0.34, 1.4, 0.5, 1);
+  --pad: clamp(1.25rem, 4vw, 4rem);
+  --r: 1.25rem;
+
+  min-height: 100dvh;
+  /* The hero phone is tilted while it demonstrates itself, and a tilted
+     20rem device is wider than its box. Clip rather than scroll. */
+  overflow-x: clip;
+  background:
+    radial-gradient(70% 55% at 88% 4%, #ffd9c4 0%, transparent 62%),
+    radial-gradient(60% 50% at 4% 22%, #e3dbff 0%, transparent 58%),
+    var(--cream);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.site :focus-visible {
+  outline: 3px solid var(--indigo);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.1rem var(--pad);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+.logoMark {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: conic-gradient(from 140deg, var(--ember), var(--indigo) 62%, var(--ember));
+}
+
+.nav {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.nav a:hover {
+  color: var(--ink);
+}
+
+.getLink {
+  margin-left: auto;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: transform var(--spring), background-color var(--spring);
+}
+
+.getLink:hover {
+  transform: translateY(-2px);
+  background: var(--indigo);
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  align-items: center;
+  padding: clamp(1.5rem, 5vh, 4rem) var(--pad) clamp(3rem, 8vh, 5rem);
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--indigo);
+}
+
+.h1 {
+  margin-top: 1rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.1rem, 4.4vw, 3.8rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+.h1 em {
+  font-style: normal;
+  color: var(--indigo);
+}
+
+.lead {
+  margin-top: 1.25rem;
+  max-width: 46ch;
+  font-size: 1.0625rem;
+  color: var(--dim);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.primary,
+.secondary {
+  display: inline-block;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: transform var(--spring);
+}
+
+.primary {
+  background: var(--indigo);
+  color: var(--white);
+}
+
+.secondary {
+  border: 1.5px solid var(--ink);
+}
+
+.primary:hover,
+.secondary:hover {
+  transform: translateY(-2px);
+}
+
+.rating {
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.tryIt {
+  margin-top: 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ember);
+}
+
+.heroPhone {
+  justify-self: center;
+}
+
+/* ── The phone ──────────────────────────────────────────────────────────── */
+
+.phone {
+  width: 20rem;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2.5rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: 0 40px 70px -30px rgb(60 30 90 / 0.35), 0 2px 0 rgb(255 255 255 / 0.6) inset;
+  overflow: hidden;
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.85rem 1.4rem 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.statusRight {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.statusRight i {
+  width: 10px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--ink);
+  opacity: 0.55;
+}
+
+.screen {
+  padding: 0.75rem 1.15rem 1rem;
+  min-height: 26rem;
+  animation: swap var(--spring) both;
+}
+
+@keyframes swap {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
+
+.greet,
+.screenTitle {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.375rem;
+  letter-spacing: -0.03em;
+}
+
+.sub {
+  margin-top: 0.15rem;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+/* Today */
+
+.ring {
+  position: relative;
+  margin: 1rem auto 1.25rem;
+  width: 10.5rem;
+}
+
+.ring svg {
+  width: 100%;
+  transform: rotate(-90deg);
+}
+
+.ringTrack,
+.ringFill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+.ringTrack {
+  stroke: var(--cream2);
+}
+
+.ringFill {
+  stroke: var(--indigo);
+  stroke-dasharray: 327;
+  stroke-dashoffset: 124;
+}
+
+.ringLabel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+}
+
+.ringLabel b {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.ringLabel span {
+  font-size: 0.6875rem;
+  color: var(--dim);
+}
+
+.cards {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.card {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--r);
+  background: var(--cream);
+}
+
+.card[data-tone="do"] {
+  background: linear-gradient(120deg, #efe9ff, #ffe7dc);
+  box-shadow: inset 0 0 0 1.5px #d8ccff;
+}
+
+.cardTime {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--indigo);
+}
+
+.cardTitle {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.cardNote {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--dim);
+}
+
+/* Rhythm */
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 9rem;
+  margin-top: 1.25rem;
+  padding: 0.5rem 0.35rem;
+  border-radius: var(--r);
+  background: linear-gradient(180deg, #f4efff, var(--white));
+}
+
+.bar {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar i {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--indigo), #a08cff);
+}
+
+.axis {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0.35rem 0;
+  font-size: 0.625rem;
+  color: var(--dim);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.stats div {
+  padding: 0.55rem 0.6rem;
+  border-radius: 0.9rem;
+  background: var(--cream);
+}
+
+.stats dt {
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.stats dd {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.stats dd[data-low] {
+  color: var(--ember);
+}
+
+.streak {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+}
+
+.streak span {
+  flex: 1;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--dim);
+  background: var(--cream);
+}
+
+.streak span[data-on] {
+  background: var(--indigo);
+  color: var(--white);
+}
+
+/* Rest */
+
+.slider {
+  display: block;
+  margin-top: 1.25rem;
+  padding: 0.85rem;
+  border-radius: var(--r);
+  background: var(--cream);
+}
+
+.sliderHead {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.sliderHead b {
+  font-family: var(--display);
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.slider input {
+  width: 100%;
+  margin-top: 0.5rem;
+  accent-color: var(--indigo);
+}
+
+.fieldLabel {
+  margin-top: 1.1rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.chip {
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  font-size: 0.8125rem;
+  transition: background-color var(--spring), color var(--spring), border-color var(--spring);
+}
+
+.chip[data-on] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+.alarm {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.1rem;
+  padding: 0.85rem;
+  border-radius: var(--r);
+  background: linear-gradient(120deg, #2a1f3a, #191227);
+  color: #f3ecff;
+}
+
+.alarmTime {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.04em;
+}
+
+.alarmNote {
+  font-size: 0.6875rem;
+  opacity: 0.75;
+}
+
+.toggle {
+  margin-left: auto;
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  background: #4b3d68;
+  position: relative;
+  flex: none;
+}
+
+.toggle[data-on] {
+  background: var(--ember);
+}
+
+.toggle::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* Tab bar */
+
+.tabs {
+  display: flex;
+  border-top: 1px solid var(--line);
+  background: var(--white);
+}
+
+.tab {
+  flex: 1;
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  padding: 0.7rem 0 1.1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--dim);
+  transition: color var(--spring);
+}
+
+.tab:disabled {
+  cursor: default;
+}
+
+.tabDot {
+  width: 20px;
+  height: 20px;
+  border-radius: 7px;
+  background: var(--cream2);
+  transition: background-color var(--spring), transform var(--spring);
+}
+
+.tab[data-on] {
+  color: var(--indigo);
+}
+
+.tab[data-on] .tabDot {
+  background: var(--indigo);
+  transform: translateY(-2px);
+}
+
+/* ── Flow ───────────────────────────────────────────────────────────────── */
+
+.flow,
+.detail,
+.states {
+  padding: clamp(2.5rem, 8vh, 5rem) var(--pad);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.5rem;
+}
+
+.h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  max-width: 20ch;
+}
+
+.sectionNote {
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+.stepPhone {
+  border-radius: 1.75rem;
+  padding: 1.25rem;
+  background: linear-gradient(160deg, #fff, #f6efff);
+  border: 1px solid var(--line);
+}
+
+.mini {
+  display: grid;
+  gap: 0.6rem;
+  min-height: 13rem;
+  align-content: start;
+}
+
+.miniStep {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--indigo);
+}
+
+.miniTitle {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+.miniField {
+  height: 2.6rem;
+  border-radius: 0.8rem;
+  background: var(--cream);
+  border: 1.5px dashed #d9c9dd;
+}
+
+.miniButton {
+  margin-top: auto;
+  padding: 0.7rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--white);
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.stepNote {
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+.gesture {
+  margin-top: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+/* ── Interaction detail ─────────────────────────────────────────────────── */
+
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.detailPhone {
+  position: relative;
+  justify-self: center;
+}
+
+.callout {
+  position: absolute;
+  width: 14rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.9rem;
+  background: var(--ink);
+  color: var(--cream);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.callout[data-at="a"] {
+  top: 34%;
+  left: -6.5rem;
+}
+
+.callout[data-at="b"] {
+  bottom: 18%;
+  right: -6.5rem;
+}
+
+.rules {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+  max-width: 56ch;
+}
+
+.rules li {
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--indigo);
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+.rules b {
+  font-family: var(--display);
+  color: var(--ink);
+}
+
+/* ── States ─────────────────────────────────────────────────────────────── */
+
+.stateList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.stateCard {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  min-height: 12rem;
+  align-content: start;
+}
+
+.stateCard[data-kind="error"] {
+  border-color: #f0c3b2;
+  background: linear-gradient(160deg, #fff4ef, var(--white));
+}
+
+.stateTitle {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: -0.02em;
+}
+
+.stateBody {
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.stateAction {
+  margin-top: auto;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  background: var(--indigo);
+  color: var(--white);
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.stateGhost {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.stateBar {
+  margin-top: auto;
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--cream2);
+}
+
+.stateBar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--indigo);
+}
+
+.stateLabel {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+/* ── Get ────────────────────────────────────────────────────────────────── */
+
+.get {
+  padding: clamp(2.5rem, 8vh, 5rem) var(--pad) 5rem;
+}
+
+.getInner {
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border-radius: 2rem;
+  background: linear-gradient(130deg, #2a1f3a, #4a2f6b 60%, #6b3f5a);
+  color: #fdf1ea;
+  text-align: center;
+}
+
+.getTitle {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.getNote {
+  margin: 0.75rem auto 0;
+  max-width: 46ch;
+  font-size: 0.9375rem;
+  opacity: 0.8;
+}
+
+.getActions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.getActions .secondary {
+  border-color: #fdf1ea;
+}
+
+.colophon {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--dim);
+}
+
+/* ── Phone-sized: the frame disappears and the app becomes the page ─────── */
+
+@media (max-width: 860px) {
+  .hero,
+  .detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .steps,
+  .stateList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .callout,
+  .callout[data-at="a"],
+  .callout[data-at="b"] {
+    position: static;
+    width: auto;
+    margin-top: 0.75rem;
+    display: block;
+  }
+
+  .heroPhone {
+    margin: 0 calc(var(--pad) * -1);
+  }
+
+  /* No device frame on a device: the app runs edge to edge, and its tab bar
+     behaves like a real one — pinned, with room for the home indicator. */
+  .heroPhone .phone {
+    width: auto;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .heroPhone .screen {
+    background: var(--white);
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding-inline: var(--pad);
+  }
+
+  .heroPhone .status {
+    display: none;
+  }
+
+  .heroPhone .tabs {
+    position: sticky;
+    bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -10px 30px -20px rgb(36 26 46 / 0.5);
+  }
+
+  .detailPhone .phone {
+    margin-inline: auto;
+  }
+}
+
+/* ── The arrival ────────────────────────────────────────────────────────────
+   The phone is the product, so it is not placed on the page — it drops into
+   it, overshoots, settles, and then starts playing the app on its own. The
+   moment a hand lands on it the demo ends and the device is handed over. */
+
+.heroPhone {
+  perspective: 1400px;
+}
+
+.heroPhone .phone {
+  animation: arrive 1150ms cubic-bezier(0.22, 1.2, 0.36, 1) 180ms both;
+}
+
+@keyframes arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(-46vh) rotateX(26deg) rotateZ(-7deg) scale(0.9);
+    box-shadow: 0 6px 14px -8px rgb(60 30 90 / 0.2);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(1.25rem) rotateX(-4deg) rotateZ(1.5deg) scale(1.015);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* While it is demonstrating itself it keeps a slow breath, so the difference
+   between "playing" and "yours" is legible without a label. */
+.heroPhone[data-demo] .phone {
+  animation:
+    arrive 1150ms cubic-bezier(0.22, 1.2, 0.36, 1) 180ms both,
+    hover 5200ms ease-in-out 1400ms infinite;
+}
+
+@keyframes hover {
+  50% {
+    transform: translateY(-9px) rotateZ(0.5deg);
+  }
+}
+
+.tryIt[data-demo] {
+  color: var(--accent, #5b3df5);
+}
+
+.tryIt[data-demo]::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-inline-end: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+  animation: blip 1600ms ease-in-out infinite;
+}
+
+@keyframes blip {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroPhone .phone,
+  .heroPhone[data-demo] .phone {
+    animation: none;
+  }
+
+  .tryIt[data-demo]::before {
+    animation: none;
+  }
+}
+
+/* ══ Onboarding ════════════════════════════════════════════════════════════
+   One question at a time, with the control it would actually ship with, and a
+   phone beside it that answers whichever question is open. The three-card grid
+   this replaces could only describe the flow; this one is the flow. */
+
+.onboard {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  margin-top: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.onboardAsk {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+  max-width: 34rem;
+}
+
+.progress {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  max-width: 14rem;
+}
+
+.progress li {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line);
+  transition: background-color var(--spring), transform var(--spring);
+}
+
+.progress li[data-state="here"] {
+  background: var(--indigo);
+  transform: scaleY(2);
+}
+
+.progress li[data-state="done"] {
+  background: color-mix(in srgb, var(--indigo) 55%, var(--cream));
+}
+
+.askTitle {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.askNote {
+  max-width: 44ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--dim);
+}
+
+.askHint {
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.onboardNav {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.askNext,
+.askGhost {
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: background-color var(--spring), color var(--spring), opacity var(--spring);
+}
+
+.askNext {
+  background: var(--indigo);
+  color: #fff;
+}
+
+.askNext:disabled {
+  background: var(--line);
+  color: var(--dim);
+  cursor: not-allowed;
+}
+
+.askGhost {
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.askGhost:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Step one: the city ─────────────────────────────────────────────────── */
+
+.cityPick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.cityChip,
+.cityLocate {
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  transition: border-color var(--spring), background-color var(--spring), color var(--spring);
+}
+
+.cityChip:hover,
+.cityLocate:hover {
+  border-color: var(--indigo);
+}
+
+.cityChip[data-on] {
+  border-color: var(--indigo);
+  background: color-mix(in srgb, var(--indigo) 12%, transparent);
+  color: var(--indigo);
+}
+
+.cityLocate {
+  border-style: dashed;
+  color: var(--dim);
+}
+
+/* ── Step two: the dial ─────────────────────────────────────────────────── */
+
+.dialWrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.dial {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: clamp(8rem, 16vw, 10.5rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 34%, #fff, var(--cream) 74%);
+  box-shadow:
+    inset 0 0 0 1px var(--line),
+    0 1rem 2rem -1rem rgb(36 26 46 / 0.28);
+  cursor: grab;
+  touch-action: none;
+  text-align: center;
+}
+
+.dial:active {
+  cursor: grabbing;
+}
+
+.dial:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 4px;
+}
+
+/* The sweep the hand can actually travel, drawn so the control has a range. */
+.dialTrack {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 230deg,
+    color-mix(in srgb, var(--indigo) 22%, transparent) 0deg,
+    color-mix(in srgb, var(--indigo) 22%, transparent) 260deg,
+    transparent 260deg
+  );
+  mask: radial-gradient(circle, transparent 76%, #000 77%);
+}
+
+.dialHand {
+  position: absolute;
+  inset: 6% auto auto 50%;
+  width: 3px;
+  height: 26%;
+  margin-inline-start: -1.5px;
+  border-radius: 2px;
+  background: var(--indigo);
+  transform-origin: 50% 168%;
+  transform: rotate(var(--turn, 0deg));
+  transition: transform 220ms var(--spring);
+}
+
+.dialValue {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.dialCaption {
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.dialOut {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.dialOut dt {
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.dialOut dd {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Step three: the confirmation ───────────────────────────────────────── */
+
+.confirmWrap {
+  display: grid;
+  gap: 0.6rem;
+  width: min(100%, 22rem);
+}
+
+.confirmTrack {
+  position: relative;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+  touch-action: none;
+}
+
+.confirmFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: color-mix(in srgb, var(--indigo) 70%, transparent);
+}
+
+.confirmKnob {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: 3rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--indigo);
+  font-size: 1.1rem;
+  box-shadow: 0 0.3rem 0.7rem -0.3rem rgb(36 26 46 / 0.4);
+  cursor: grab;
+}
+
+.confirmKnob:active {
+  cursor: grabbing;
+}
+
+.confirmLabel {
+  position: absolute;
+  inset: 0 1rem 0 auto;
+  display: grid;
+  place-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--ink) 62%, var(--cream));
+}
+
+/* ── The phone's onboarding screens ─────────────────────────────────────── */
+
+.onboardPhone {
+  justify-self: center;
+}
+
+.onboardScreen {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.25rem 1.15rem 1.5rem;
+  animation: osIn 460ms var(--spring) both;
+}
+
+@keyframes osIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.9rem);
+  }
+}
+
+.osKicker {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--indigo);
+}
+
+.osBig {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 2.1rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.osNote {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.osArc {
+  width: 100%;
+  margin-top: 0.6rem;
+}
+
+.osArcGround {
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+
+.osArcPath {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2;
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  transition: stroke-dashoffset 900ms var(--spring), stroke 400ms ease;
+}
+
+.osArcPath[data-on] {
+  stroke: var(--indigo);
+  stroke-dashoffset: 0;
+}
+
+.osSun {
+  fill: var(--ember);
+}
+
+.osBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 4.5rem;
+  margin-top: 0.7rem;
+}
+
+.osBars span {
+  flex: 1;
+  height: calc(var(--v) * 100%);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--indigo) calc(var(--v) * 90%), var(--line));
+  transition: height 320ms var(--spring), background-color 320ms var(--spring);
+}
+
+.osNights {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.osNights span {
+  flex: 1;
+  height: 2.6rem;
+  border-radius: 0.5rem;
+  border: 1px dashed var(--line);
+  transition: background-color var(--spring), border-color var(--spring);
+}
+
+.osNights span[data-fill] {
+  border-style: solid;
+  border-color: var(--indigo);
+  background: color-mix(in srgb, var(--indigo) 16%, transparent);
+}
+
+.osQuiet {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+
+.osQuiet span {
+  flex: 1;
+  height: 2.6rem;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--indigo) 14%, transparent);
+  animation: quiet 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 260ms);
+}
+
+@keyframes quiet {
+  50% {
+    background: color-mix(in srgb, var(--indigo) 26%, transparent);
+  }
+}
+
+@media (max-width: 900px) {
+  .onboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .onboardPhone {
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboardScreen,
+  .osQuiet span {
+    animation: none;
+  }
+
+  .osArcPath[data-on] {
+    transition: none;
+  }
+}
+
+/* The two annotations point at the phone from outside it, which needs room to
+   the left. Below 1100 there is none, so they sit under the device and keep
+   their pointer rule rather than hanging off the canvas. */
+@media (max-width: 1100px) {
+  .detailPhone {
+    padding-bottom: 0;
+  }
+
+  .callout {
+    position: static;
+    display: block;
+    max-width: 100%;
+    margin-top: 0.6rem;
+    inset: auto;
+    transform: none;
+  }
+
+  .callout::after {
+    display: none;
+  }
+}

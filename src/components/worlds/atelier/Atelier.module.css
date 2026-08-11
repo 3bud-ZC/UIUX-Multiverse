@@ -1,0 +1,1088 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   02 · مِجاز — an Arabic poetry house.
+
+   Right to left, and laid out the way an Arabic page is laid out: the text
+   block sits hard against the inner (right) edge and the wide outer margin
+   carries the glosses. Nothing here is a mirrored Latin grid.
+
+   One rule governs the type: Arabic is a connected script, so no run of Arabic
+   in this file is ever letter-spaced, and no run of it is ever uppercased.
+   Emphasis is made with size, weight, colour and the gold — never by pulling
+   the letters apart.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@property --base {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #0d1420;
+}
+
+@property --ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f2e9d8;
+}
+
+@property --line {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #26344b;
+}
+
+@property --gold {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #d9a441;
+}
+
+@property --lapis {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #7e9fd6;
+}
+
+.world {
+  /* Each century hands the page its own four inks. Registering them as <color>
+     is what lets a change of era cross-fade the whole sheet on one curve rather
+     than snapping panel by panel. */
+  --base: var(--era-base, #0d1420);
+  --ink: var(--era-ink, #f2e9d8);
+  --dim: #a99a80;
+  --line: var(--era-rule, #26344b);
+  --gold: var(--era-accent, #d9a441);
+  --lapis: var(--era-alt, #7e9fd6);
+  transition:
+    --base 900ms var(--ink-ease),
+    --ink 900ms var(--ink-ease),
+    --line 900ms var(--ink-ease),
+    --gold 900ms var(--ink-ease),
+    --lapis 900ms var(--ink-ease);
+
+  /* The manuscript block: narrow inner margin, wide outer margin. */
+  --inner: clamp(1.25rem, 6vw, 6.5rem);
+  --outer: clamp(1.25rem, 16vw, 17rem);
+  --ink-ease: cubic-bezier(0.2, 0.65, 0.2, 1);
+
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  min-height: 100dvh;
+  background: var(--base);
+  color: var(--ink);
+  font-family: var(--font-amiri), "Times New Roman", serif;
+  font-size: 1.0625rem;
+  line-height: 1.95;
+  overflow-x: clip;
+}
+
+.field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Folio line ─────────────────────────────────────────────────────────── */
+
+.folio {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 1rem 1.75rem;
+  padding: clamp(1.25rem, 3vh, 2.25rem) var(--inner) 1.25rem var(--outer);
+  border-block-end: 1px solid var(--line);
+}
+
+.wordmark {
+  font-family: var(--font-ruqaa), serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.tagline {
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+.nav {
+  display: flex;
+  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.9375rem;
+}
+
+.nav a {
+  color: var(--dim);
+  padding-block-end: 0.2rem;
+  border-block-end: 1px solid transparent;
+  transition: color 400ms var(--ink-ease), border-color 400ms var(--ink-ease);
+}
+
+.nav a:hover,
+.nav a:focus-visible {
+  color: var(--gold);
+  border-block-end-color: var(--gold);
+}
+
+/* ── The verse stage ────────────────────────────────────────────────────── */
+
+.stage {
+  position: relative;
+  padding: clamp(3rem, 9vh, 6.5rem) var(--inner) clamp(2.5rem, 7vh, 5rem) var(--outer);
+}
+
+.corner {
+  position: absolute;
+  inset-block-start: clamp(1.5rem, 4vh, 3rem);
+  inset-inline-end: calc(var(--inner) * 0.35);
+  width: clamp(4.5rem, 9vw, 8.5rem);
+  opacity: 0.5;
+}
+
+.stageMeta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+.poetTag {
+  color: var(--gold);
+}
+
+.srTitle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.verse {
+  position: relative;
+  margin-block: clamp(1.75rem, 4vh, 3rem) 0;
+  max-width: 22ch;
+  font-family: var(--font-ruqaa), serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 5.4vw, 4.25rem);
+  line-height: 1.75;
+  color: var(--ink);
+}
+
+.hemistich {
+  display: block;
+}
+
+/* The caesura between صدر and عجز — a gold lozenge, the way a copyist marks
+   the break between the two halves of a line. */
+.caesura {
+  display: block;
+  width: 0.55em;
+  height: 0.55em;
+  margin: 0.25em auto 0.15em;
+  background: var(--gold);
+  transform: rotate(45deg);
+  opacity: 0;
+  animation: settle 700ms var(--ink-ease) 900ms forwards;
+}
+
+/* A word is not faded in — it is laid down. The mask sweeps right to left and
+   the blur clears behind it, which is the whole reason this reads as writing
+   rather than as a stagger. */
+.word {
+  display: inline-block;
+  margin-inline-start: 0.3em;
+  opacity: 0;
+  filter: blur(9px);
+  -webkit-mask-image: linear-gradient(to left, #000 38%, transparent 68%);
+  mask-image: linear-gradient(to left, #000 38%, transparent 68%);
+  -webkit-mask-size: 280% 100%;
+  mask-size: 280% 100%;
+  -webkit-mask-position: 0% 0;
+  mask-position: 0% 0;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: nib 780ms var(--ink-ease) forwards;
+  animation-delay: calc(var(--i) * 145ms);
+}
+
+@keyframes nib {
+  0% {
+    opacity: 0;
+    filter: blur(9px);
+    mask-position: 0% 0;
+    -webkit-mask-position: 0% 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    mask-position: 100% 0;
+    -webkit-mask-position: 100% 0;
+  }
+}
+
+@keyframes settle {
+  to {
+    opacity: 1;
+  }
+}
+
+.swash {
+  display: block;
+  width: 100%;
+  height: clamp(1.75rem, 4vw, 3.25rem);
+  margin-block-start: 0.35em;
+  overflow: visible;
+}
+
+.swash path {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: draw 1600ms var(--ink-ease) 1050ms forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Marginalia. Sits in the outer margin at the height of the verse, the way a
+   copyist notes the attribution beside the line rather than under it. */
+.stageMargin {
+  position: absolute;
+  /* The *outer* margin — the left one in an RTL page. Setting it on the inline
+     start would put it under the verse, which is the inner edge. */
+  inset-inline-end: var(--inner);
+  inset-block-start: clamp(7rem, 20vh, 13rem);
+  display: none;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 11rem;
+  opacity: 0;
+  animation: settle 900ms var(--ink-ease) 1400ms forwards;
+}
+
+.marginRule {
+  width: 2.75rem;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.7;
+}
+
+.marginYears {
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.875rem;
+  color: var(--lapis);
+}
+
+.marginKunya {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--dim);
+}
+
+@media (min-width: 900px) {
+  .stageMargin {
+    display: flex;
+  }
+}
+
+.stageFoot {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-block-start: clamp(1.5rem, 4vh, 2.75rem);
+}
+
+.rewrite {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.9375rem;
+  color: var(--base);
+  background: var(--gold);
+  transition: background 400ms var(--ink-ease), transform 400ms var(--ink-ease);
+}
+
+.rewrite:hover {
+  background: #eabd63;
+  transform: translateY(-1px);
+}
+
+.epithet {
+  font-size: 1.0625rem;
+  color: var(--dim);
+}
+
+/* ── Sections ───────────────────────────────────────────────────────────── */
+
+.poets,
+.bahr,
+.gallery,
+.reading {
+  padding: clamp(2.5rem, 7vh, 5rem) var(--inner) clamp(2.5rem, 7vh, 5rem) var(--outer);
+  border-block-start: 1px solid var(--line);
+}
+
+.sectionHead {
+  max-width: 46ch;
+  margin-block-end: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.sectionHead h2 {
+  font-family: var(--font-ruqaa), serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.8vw, 2.25rem);
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.sectionHead p {
+  margin-block-start: 0.35rem;
+  color: var(--dim);
+}
+
+.sectionHead b {
+  color: var(--gold);
+  font-weight: 400;
+}
+
+/* ── Poets: a table of contents, read across ────────────────────────────── */
+
+.poetList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  border-block-start: 1px solid var(--line);
+}
+
+.poetList li {
+  border-block-end: 1px solid var(--line);
+  border-inline-start: 1px solid var(--line);
+}
+
+.poetList li:last-child {
+  border-inline-start: 0;
+}
+
+.poet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+  height: 100%;
+  padding: 1.1rem 1.1rem 1.35rem;
+  text-align: start;
+  transition: background 500ms var(--ink-ease), color 500ms var(--ink-ease);
+}
+
+.poet:hover {
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+}
+
+.poet[data-on] {
+  background: color-mix(in srgb, var(--gold) 14%, transparent);
+  box-shadow: inset 0 -3px 0 var(--gold);
+}
+
+.poetName {
+  font-family: var(--font-ruqaa), serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.poet[data-on] .poetName {
+  color: var(--gold);
+}
+
+.poetKunya {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.poetYears {
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.8125rem;
+  color: var(--lapis);
+}
+
+.poetNote {
+  margin-block-start: 0.4rem;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--dim);
+}
+
+/* ── Metre ──────────────────────────────────────────────────────────────── */
+
+.feet {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: clamp(0.5rem, 1.4vw, 1rem);
+}
+
+.foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1.25rem 0.75rem;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  transition: border-color 400ms var(--ink-ease), background 400ms var(--ink-ease);
+  animation: footIn 700ms var(--ink-ease) backwards;
+  animation-delay: calc(var(--i) * 110ms);
+}
+
+@keyframes footIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+}
+
+.foot:hover {
+  border-color: var(--gold);
+}
+
+.foot[data-on] {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+}
+
+.footName {
+  font-family: var(--font-reem), sans-serif;
+  font-size: 1.125rem;
+  color: var(--ink);
+}
+
+.foot[data-on] .footName {
+  color: var(--gold);
+}
+
+.footPattern {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.footPattern i {
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid var(--dim);
+  border-radius: 50%;
+}
+
+.footPattern i[data-long] {
+  background: var(--lapis);
+  border-color: var(--lapis);
+}
+
+.foot[data-on] .footPattern i[data-long] {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.bahrNote {
+  margin-block-start: 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+/* ── Gallery: four illuminated plates, hung unevenly ────────────────────── */
+
+.plates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  align-items: start;
+}
+
+.plate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1.25rem, 2.4vw, 2rem) 1rem;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--lapis) 5%, transparent);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity 1200ms var(--ink-ease),
+    transform 1200ms var(--ink-ease),
+    border-color 500ms var(--ink-ease);
+  transition-delay: calc(var(--i) * 140ms);
+}
+
+.plate[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hung on a line rather than in a row — an even row of four would read as a
+   card grid, which is the one thing a gallery wall must not read as. */
+.plate:nth-child(2) {
+  margin-block-start: clamp(1rem, 3vw, 2.75rem);
+}
+
+.plate:nth-child(3) {
+  margin-block-start: clamp(0.5rem, 1.4vw, 1.25rem);
+}
+
+.plate:nth-child(4) {
+  margin-block-start: clamp(1.5rem, 4vw, 3.75rem);
+}
+
+.plate:hover {
+  border-color: color-mix(in srgb, var(--gold) 55%, transparent);
+}
+
+.plateArt {
+  width: clamp(5rem, 9vw, 7.5rem);
+  opacity: 0.85;
+  transition: transform 1400ms var(--ink-ease), opacity 700ms var(--ink-ease);
+}
+
+.plate:hover .plateArt {
+  transform: rotate(22.5deg);
+  opacity: 1;
+}
+
+.plateLine {
+  font-family: var(--font-ruqaa), serif;
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+.plateBy {
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+/* ── Reading room ───────────────────────────────────────────────────────── */
+
+.column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(9rem, 16vw, 14rem);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.body {
+  border-inline-end: 2px solid var(--gold);
+  padding-inline-end: clamp(1rem, 2.5vw, 2.25rem);
+}
+
+.line {
+  font-family: var(--font-amiri), serif;
+  font-size: clamp(1.125rem, 2.1vw, 1.6rem);
+  line-height: 2.15;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateX(-0.75rem);
+  transition:
+    opacity 1400ms var(--ink-ease),
+    transform 1400ms var(--ink-ease);
+  transition-delay: calc(var(--i) * 130ms);
+}
+
+.line[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.line:nth-child(even) {
+  padding-inline-start: clamp(1.5rem, 6vw, 5rem);
+  color: color-mix(in srgb, var(--ink) 82%, var(--base));
+}
+
+.sign {
+  margin-block-start: 1.5rem;
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.9375rem;
+  color: var(--dim);
+}
+
+/* The outer margin, where a manuscript has always put its glosses. */
+.margin {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-block-start: 0.5rem;
+}
+
+.gloss {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-block-start: 0.6rem;
+  border-block-start: 1px solid var(--line);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.gloss b {
+  font-family: var(--font-reem), sans-serif;
+  font-weight: 400;
+  color: var(--gold);
+}
+
+.gloss span {
+  color: var(--dim);
+}
+
+/* ── Illumination ───────────────────────────────────────────────────────── */
+
+/* Width is set by whatever hangs the ornament — a corner piece and a plate are
+   not the same size — so this rule deliberately does not claim one. */
+.illum {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.iRing {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1;
+  opacity: 0.65;
+}
+
+.iFill {
+  fill: color-mix(in srgb, var(--lapis) 26%, transparent);
+  stroke: var(--lapis);
+  stroke-width: 1;
+}
+
+.iLine {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.25;
+}
+
+.iDot {
+  fill: var(--gold);
+}
+
+/* ── Colophon ───────────────────────────────────────────────────────────── */
+
+.colophon {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  flex-wrap: wrap;
+  padding: 2rem var(--inner) clamp(3rem, 8vh, 5rem) var(--outer);
+  border-block-start: 1px solid var(--line);
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+/* ── Focus ──────────────────────────────────────────────────────────────── */
+
+.world :is(a, button):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ── Phone ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  .world {
+    --inner: 1.25rem;
+    --outer: 1.25rem;
+    font-size: 1rem;
+  }
+
+  .folio {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+  }
+
+  .corner {
+    inset-block-start: auto;
+    inset-block-end: calc(100% - 3rem);
+    opacity: 0.28;
+  }
+
+  .verse {
+    max-width: none;
+    font-size: clamp(1.5rem, 8.5vw, 2.5rem);
+    line-height: 1.85;
+  }
+
+  .column {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .body {
+    border-inline-end: 0;
+    border-inline-start: 2px solid var(--gold);
+    padding-inline: 0 0;
+    padding-inline-start: 1rem;
+  }
+
+  .line:nth-child(even) {
+    padding-inline-start: 1.5rem;
+  }
+
+  .margin {
+    border-block-start: 1px solid var(--line);
+    padding-block-start: 1.25rem;
+  }
+
+  .plate:nth-child(n) {
+    margin-block-start: 0;
+  }
+}
+
+/* ── Reduced motion: the page arrives written, not mid-stroke ───────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .word {
+    opacity: 1;
+    filter: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+    animation: none;
+  }
+
+  .caesura {
+    opacity: 1;
+    animation: none;
+  }
+
+  .swash path {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+
+  .foot {
+    animation: none;
+  }
+
+  .plate,
+  .line {
+    opacity: 1;
+    transform: none;
+  }
+
+  .plate:hover .plateArt {
+    transform: none;
+  }
+}
+
+/* ══ العصور ════════════════════════════════════════════════════════════════
+   Five centuries as a band across the top of the folio. Choosing one turns the
+   page: a leaf sweeps across, and the ink, the paper temperature and the amount
+   of illumination underneath it are the period's own. */
+
+.eras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  padding: 0 var(--inner) 0 var(--outer);
+  border-block-end: 1px solid var(--line);
+}
+
+.era {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.7rem clamp(0.7rem, 2vw, 1.4rem) 0.75rem;
+  text-align: start;
+  color: var(--dim);
+  border-block-end: 2px solid transparent;
+  transition: color 500ms var(--ink-ease), border-color 500ms var(--ink-ease);
+}
+
+.era:hover {
+  color: var(--ink);
+}
+
+.era[data-on] {
+  color: var(--ink);
+  border-block-end-color: var(--gold);
+}
+
+.eraName {
+  font-family: var(--font-ruqaa), serif;
+  font-size: clamp(1.0625rem, 2vw, 1.4rem);
+  line-height: 1.3;
+}
+
+.era[data-on] .eraName {
+  color: var(--gold);
+}
+
+.eraSpan {
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.eraNote {
+  max-width: 62ch;
+  padding: 1rem var(--inner) 0 var(--outer);
+  font-size: 1.0625rem;
+  line-height: 1.95;
+  color: color-mix(in srgb, var(--ink) 76%, var(--base));
+  animation: noteIn 1200ms var(--ink-ease) both;
+}
+
+@keyframes noteIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+}
+
+/* ── The leaf ──────────────────────────────────────────────────────────────
+   A page turn, not a fade: one sheet with a shadow under its leading edge
+   sweeps from the inner margin outward, which in an RTL book is right to left. */
+
+.leaf {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    270deg,
+    color-mix(in srgb, var(--base) 92%, #000) 0%,
+    color-mix(in srgb, var(--base) 70%, var(--gold)) 46%,
+    color-mix(in srgb, var(--base) 96%, #000) 52%,
+    transparent 53%
+  );
+  transform: translateX(102%);
+}
+
+.world[data-turning] .leaf {
+  animation: turn 900ms cubic-bezier(0.55, 0, 0.3, 1) both;
+}
+
+@keyframes turn {
+  0% {
+    opacity: 1;
+    transform: translateX(102%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-102%);
+  }
+}
+
+/* ══ The pointing ══════════════════════════════════════════════════════════
+   The skeleton of the line is written first and the harakat settle onto it
+   afterwards. Both layers are the same width, so nothing shifts. */
+
+.word {
+  position: relative;
+}
+
+.skeleton {
+  visibility: visible;
+}
+
+.pointed {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: point 700ms var(--ink-ease) both;
+  animation-delay: calc(var(--i) * 190ms + 520ms);
+}
+
+@keyframes point {
+  from {
+    opacity: 0;
+    transform: translateY(-0.12em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Once the marks are on, the unpointed layer is redundant — but it has to stay
+   in the flow to hold the width, so it goes transparent rather than away. */
+.skeleton {
+  animation: unpoint 1ms linear both;
+  animation-delay: calc(var(--i) * 190ms + 1180ms);
+}
+
+@keyframes unpoint {
+  to {
+    color: transparent;
+  }
+}
+
+/* ══ الأشكال ═══════════════════════════════════════════════════════════════ */
+
+.forms {
+  padding: clamp(3rem, 8vh, 6rem) var(--inner) clamp(2rem, 5vh, 4rem) var(--outer);
+  border-block-start: 1px solid var(--line);
+}
+
+.formList {
+  display: grid;
+  gap: 0;
+  margin-block-start: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: 0.5rem clamp(1.5rem, 4vw, 3.5rem);
+  padding-block: clamp(1rem, 2.5vh, 1.6rem);
+  border-block-start: 1px solid var(--line);
+  opacity: 0;
+  transform: translateY(0.6rem);
+  transition:
+    opacity 1000ms var(--ink-ease),
+    transform 1000ms var(--ink-ease);
+  transition-delay: calc(var(--i) * 110ms);
+}
+
+.form[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.form dt {
+  display: grid;
+  gap: 0.15rem;
+  align-content: start;
+}
+
+.formName {
+  font-family: var(--font-ruqaa), serif;
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  line-height: 1.35;
+  color: var(--gold);
+}
+
+.formWhen {
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.formWhat {
+  max-width: 58ch;
+  color: color-mix(in srgb, var(--ink) 82%, var(--base));
+}
+
+.formLine {
+  margin-block-start: 0.7rem;
+  font-family: var(--font-ruqaa), serif;
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  line-height: 1.85;
+}
+
+.formBy {
+  font-family: var(--font-reem), sans-serif;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+/* ══ Ornament restraint ════════════════════════════════════════════════════
+   A جاهلي page had no illuminator. The amount of gold on screen is the century's,
+   not the designer's mood. */
+
+.world[data-era="jahili"] .illum,
+.world[data-era="sadr"] .plateArt {
+  opacity: 0.35;
+}
+
+.world[data-era="jahili"] .corner {
+  opacity: 0.16;
+}
+
+.world[data-era="andalusi"] .illum,
+.world[data-era="abbasi"] .illum {
+  opacity: 1;
+}
+
+/* ── Marginalia: notes, in a hand, added after the fact ────────────────── */
+
+.gloss {
+  transform: rotate(var(--tilt, 0deg)) translateX(0.5rem);
+  opacity: 0;
+  transition:
+    opacity 900ms var(--ink-ease),
+    transform 900ms var(--ink-ease);
+  transition-delay: calc(var(--i) * 160ms + 300ms);
+}
+
+.gloss[data-in] {
+  opacity: 1;
+  transform: rotate(var(--tilt, 0deg)) translateX(0);
+}
+
+@media (max-width: 760px) {
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .eras {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .era {
+    flex: 0 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pointed {
+    animation: none;
+    opacity: 1;
+  }
+
+  .skeleton {
+    animation: none;
+    color: transparent;
+  }
+
+  .world[data-turning] .leaf {
+    animation: none;
+    opacity: 0;
+  }
+
+  .gloss,
+  .form {
+    opacity: 1;
+    transform: rotate(var(--tilt, 0deg));
+  }
+}

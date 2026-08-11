@@ -1,0 +1,1378 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   01 — NOVA · AI decision intelligence
+
+   A workspace, not a landing page: fixed rail, sticky command bar, a scrolling
+   application body on a 12-column field. Type is engineered — expanded grotesk
+   for headings, a tight sans for prose, mono for anything a machine produced.
+   Motion is short and predictive; nothing here eases for longer than 240ms.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.app {
+  --base: #05070e;
+  --raise: #0b1020;
+  --raise2: #10162b;
+  --ink: #e9edfa;
+  --dim: #98a4cc;
+  --line: #1c2440;
+  --accent: #7fe7f5;
+  --alt: #3b5bff;
+  --ok: #58e39b;
+  --warn: #ffb454;
+
+  --display: var(--font-schibsted), system-ui, sans-serif;
+  --body: var(--font-inter-tight), system-ui, sans-serif;
+  --mono: var(--font-jetbrains), ui-monospace, monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  display: grid;
+  grid-template-columns: 13.5rem minmax(0, 1fr);
+  min-height: 100dvh;
+  background: var(--base);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.app :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Rail ───────────────────────────────────────────────────────────────── */
+
+.rail {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1rem 5.5rem;
+  border-right: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--raise), var(--base) 40%);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.035em;
+}
+
+/* The mark is the five-phase spine, compressed. A gradient diamond says nothing
+   about what this product does; five rising steps say the whole thing. */
+.markGlyph {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background:
+    linear-gradient(var(--accent), var(--accent)) 0 100% / 3px 40% no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 4px 100% / 3px 62% no-repeat,
+    linear-gradient(var(--alt), var(--alt)) 8px 100% / 3px 84% no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 12px 100% / 3px 100% no-repeat;
+}
+
+.nav {
+  margin-top: 2.25rem;
+  display: grid;
+  gap: 1px;
+}
+
+.navItem {
+  padding: 0.4rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+  border-left: 2px solid transparent;
+  transition: color 240ms var(--ease), border-color 240ms var(--ease),
+    background-color 240ms var(--ease);
+}
+
+.navItem:hover {
+  color: var(--ink);
+  border-left-color: var(--accent);
+  background: #0a0f1f;
+}
+
+.railFoot {
+  margin-top: auto;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  line-height: 1.8;
+}
+
+.railOrg {
+  color: var(--ink);
+}
+
+.railEnv {
+  color: var(--dim);
+}
+
+/* ── Command bar ────────────────────────────────────────────────────────── */
+
+.main {
+  min-width: 0;
+}
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.6rem clamp(1rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+  background: rgb(5 7 14 / 0.86);
+  backdrop-filter: blur(12px);
+}
+
+.ask {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  max-width: 34rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--line);
+  background: #080c18;
+}
+
+.askKey {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--accent);
+}
+
+.askText {
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.status {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.status div {
+  display: flex;
+  gap: 0.5ch;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+}
+
+.status dt {
+  color: #6b78a3;
+}
+
+.status dd {
+  color: var(--dim);
+}
+
+.status dd[data-ok] {
+  color: var(--ok);
+}
+
+/* ── The thesis ─────────────────────────────────────────────────────────────
+   One screen that says what the product is before any of it is touched. The
+   console below is the proof; this is the claim, and it is set at a size the
+   console deliberately never reaches. */
+
+.thesis {
+  position: relative;
+  container-type: inline-size;
+  padding: clamp(1.8rem, 4.5vh, 3.25rem) clamp(1rem, 3vw, 2.5rem) clamp(2.5rem, 6vh, 4rem);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+/* Claim on the left, evidence on the right. The field's probes converge on the
+   ledger, so the atmosphere is doing the product's argument rather than
+   decorating behind it. */
+.thesisGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+.thesisClaim {
+  min-width: 0;
+}
+
+/* Sentence case, and two weights inside one sentence. Caps at display size is
+   the silhouette every AI product currently wears; here the hierarchy is weight
+   and colour, which is also how the rest of the interface signals importance. */
+.hero {
+  position: relative;
+  margin-top: 1rem;
+  max-width: 24ch;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.9rem, 4.6cqi, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.042em;
+  text-transform: none;
+}
+
+.heroHot {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+/* The operative clause, and the only accent in the lockup. */
+.heroHot em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.heroLede {
+  position: relative;
+  margin-top: 1.5rem;
+  max-width: 62ch;
+  font-size: clamp(0.9375rem, 1.15vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--dim);
+}
+
+/* The pipeline, stated once as a diagram. Numbered because it genuinely is a
+   sequence — the order is the argument. */
+.flow {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0;
+  margin-top: clamp(2rem, 5vh, 3.25rem);
+  border-top: 1px solid var(--line);
+}
+
+.flow li {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1rem 1.15rem 1.25rem 0;
+  border-right: 1px solid var(--line);
+  padding-right: 1.15rem;
+  animation: flowIn 700ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+.flow li:last-child {
+  border-right: 0;
+}
+
+@keyframes flowIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+}
+
+.flowIndex {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.flowLabel {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: -0.025em;
+}
+
+.flowNote {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+/* ── Console ────────────────────────────────────────────────────────────── */
+
+.console {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding: clamp(2rem, 5vh, 4rem) clamp(1rem, 3vw, 2.5rem) clamp(2.5rem, 6vh, 4.5rem);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.55;
+  mask-image: radial-gradient(120% 110% at 78% 56%, #000 22%, transparent 78%);
+  pointer-events: none;
+}
+
+.consoleHead,
+.run {
+  position: relative;
+}
+
+/* The title is measured against its own column, not the viewport — at 1440 the
+   viewport is generous and this column is not, and "INTELLIGENCE" set in an
+   expanded grotesk will happily run under the console panel. */
+.consoleHead {
+  container-type: inline-size;
+}
+
+.kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7ch;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The reference itself: the same number the rail navigates by. */
+.kicker b {
+  padding: 0.05rem 0.35rem;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.h1 {
+  margin-top: 0.9rem;
+  max-width: 22ch;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 8.4cqi, 2.9rem);
+  line-height: 1.02;
+  letter-spacing: -0.038em;
+}
+
+.h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 2vw, 1.9rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+}
+
+.blurb {
+  margin-top: 1.1rem;
+  max-width: 40ch;
+  color: var(--dim);
+}
+
+/* The four guarantees the console depends on. They sit under the title because
+   they are the reason the run above can be trusted, not a feature list. */
+.policy {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1px;
+  border-top: 1px solid var(--line);
+}
+
+.policy div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #131a30;
+}
+
+.policy dt {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  align-self: center;
+}
+
+.policy dd {
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+/* ── The run ────────────────────────────────────────────────────────────── */
+
+.run {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, #0a0f20, #070b16);
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab {
+  padding: 0.35rem 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  border: 1px solid transparent;
+  transition: color 240ms var(--ease), background-color 240ms var(--ease),
+    border-color 240ms var(--ease);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--base);
+  background: var(--accent);
+}
+
+.tab:not([aria-selected="true"]):hover {
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.tabState {
+  margin-left: auto;
+  padding-right: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--warn);
+}
+
+.question {
+  padding: 1rem 1.1rem 0.6rem;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+}
+
+/* ── The run's spine ────────────────────────────────────────────────────────
+   The same five phases as the diagram above, but live: each one lights when
+   the stream reaches it. This is what makes a scrolling log read as reasoning
+   rather than as output. */
+
+.pipeline {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0;
+  margin: 0 1.1rem 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.pipeline li {
+  display: grid;
+  justify-items: start;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.pipeDot {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background: var(--line);
+  transition: background 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.pipeDot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: var(--accent);
+  transition: transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.pipeline li[data-state="done"] .pipeDot::after,
+.pipeline li[data-state="live"] .pipeDot::after {
+  transform: scaleX(1);
+}
+
+.pipeline li[data-state="live"] .pipeDot::after {
+  animation: pipePulse 1100ms ease-in-out infinite;
+}
+
+@keyframes pipePulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.pipeLabel {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  transition: color 320ms ease;
+}
+
+.pipeline li[data-state="done"] .pipeLabel,
+.pipeline li[data-state="live"] .pipeLabel {
+  color: var(--ink);
+}
+
+.stream {
+  padding: 0 1.1rem 0.75rem;
+  display: grid;
+  gap: 1px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 3.2rem 5.2rem minmax(0, 1fr) 4.6rem;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-top: 1px solid #131a30;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 240ms var(--ease), transform 240ms var(--ease);
+}
+
+.step[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+
+.stepAt,
+.stepAgent,
+.conf {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+}
+
+.stepAt {
+  color: #5f6c99;
+}
+
+.stepAgent {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--alt);
+}
+
+.stepAgent[data-agent="check"] {
+  color: var(--warn);
+}
+
+.stepAgent[data-agent="decide"] {
+  color: var(--accent);
+}
+
+.stepText {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #cbd3ee;
+}
+
+.source {
+  display: inline-block;
+  margin-left: 0.55rem;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 0.5625rem;
+  letter-spacing: 0.06em;
+  color: #6b78a3;
+  border-bottom: 1px dotted #33406b;
+}
+
+.conf {
+  display: flex;
+  align-items: center;
+  gap: 0.5ch;
+  justify-self: end;
+  color: var(--dim);
+}
+
+.confBar {
+  position: relative;
+  width: 40px;
+  height: 3px;
+  background: #1c2440;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-size: calc(var(--v) * 100%) 100%;
+}
+
+/* The policy floor, marked on the bar rather than stated in a paragraph. */
+.confBar::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 80%;
+  width: 1px;
+  background: var(--warn);
+}
+
+.conf[data-under] {
+  color: var(--warn);
+}
+
+.conf[data-under] .confBar {
+  background-image: linear-gradient(var(--warn), var(--warn));
+}
+
+.verdict {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem 1.5rem;
+  padding: 1rem 1.1rem 1.1rem;
+  border-top: 1px solid var(--line);
+  background: #080d1c;
+  opacity: 0.35;
+  transition: opacity 240ms var(--ease);
+}
+
+.verdict[data-done] {
+  opacity: 1;
+}
+
+.verdictLabel {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.verdictText {
+  margin-top: 0.35rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.verdictDetail {
+  margin-top: 0.4rem;
+  max-width: 48ch;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.verdictMeta {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  text-align: right;
+}
+
+.verdictMeta dt {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6b78a3;
+}
+
+.verdictMeta dd {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+
+.verdictMeta dd[data-risk="elevated"] {
+  color: var(--warn);
+}
+
+.verdictMeta dd[data-risk="low"] {
+  color: var(--ok);
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  padding-top: 0.35rem;
+}
+
+.primary,
+.ghost {
+  padding: 0.5rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background-color 240ms var(--ease), color 240ms var(--ease),
+    border-color 240ms var(--ease);
+}
+
+.primary {
+  background: var(--accent);
+  color: #04121a;
+}
+
+.primary:hover:not(:disabled) {
+  background: #a8f2fc;
+}
+
+.ghost {
+  border: 1px solid var(--line);
+  color: var(--dim);
+}
+
+.ghost:hover:not(:disabled) {
+  color: var(--ink);
+  border-color: var(--dim);
+}
+
+.primary:disabled,
+.ghost:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.receipt {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  color: var(--ok);
+}
+
+/* ── Agents ─────────────────────────────────────────────────────────────── */
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.agents,
+.signals,
+.runs,
+.surface {
+  padding: clamp(2rem, 5vh, 3.5rem) clamp(1rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+}
+
+/* This was four equal bordered cards with a number, a bold line and two lines of
+   grey text — which is the row-of-cards tell whatever the content is. The chain
+   genuinely is a pipeline, so it is drawn as one: a single rule with the stages
+   hung off it, each stage's node sitting *on* the line, and the width of a stage
+   set by how much work it does rather than by dividing by four. */
+.chain {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr 0.9fr;
+  gap: 0;
+  padding-top: 1.6rem;
+}
+
+/* The line the whole chain runs along. */
+.chain::before {
+  content: "";
+  position: absolute;
+  inset: 1.6rem auto auto 0;
+  width: 100%;
+  height: 1px;
+  background: var(--line);
+}
+
+/* The chain is a sequence, so the numbering is real: stage 3 cannot run before
+   stage 2. The connector is drawn on the node, not between the nodes. */
+.node {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.4rem 1.6rem 1.1rem 0;
+  text-align: left;
+  transition: opacity 240ms var(--ease);
+  opacity: 0.62;
+}
+
+/* The node itself: a stop on the line, filled when the stage is the one being
+   read. Stage 4 has no successor, so no segment leaves it. */
+.node::before {
+  content: "";
+  position: absolute;
+  inset: -5px auto auto 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--base);
+  transition: background-color 240ms var(--ease), border-color 240ms var(--ease);
+}
+
+.node:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset: -1px 0 auto 9px;
+  height: 1px;
+  background: var(--line);
+  transition: background-color 240ms var(--ease);
+}
+
+.node:hover,
+.node[data-on] {
+  opacity: 1;
+}
+
+.node[data-on]::before {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.node[data-on]::after {
+  background: color-mix(in srgb, var(--accent) 60%, var(--line));
+}
+
+.node:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.nodeIndex {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: var(--alt);
+}
+
+.nodeName {
+  font-family: var(--display);
+    font-weight: 700;
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.nodeNote {
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+.nodeCalls {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: #6b78a3;
+}
+
+.chainNote {
+  margin-top: 1rem;
+  max-width: 68ch;
+  font-size: 0.875rem;
+  color: var(--dim);
+}
+
+/* ── Signals ────────────────────────────────────────────────────────────── */
+
+.metrics {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.metric {
+  padding: 0.9rem 1rem 1rem;
+  background: #070b16;
+}
+
+.metric dt {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6b78a3;
+}
+
+.metric dd {
+  margin-top: 0.45rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.metricValue {
+  font-family: var(--mono);
+  font-size: 1.375rem;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.metricDelta {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: var(--warn);
+}
+
+.metricDelta[data-up] {
+  color: var(--ok);
+}
+
+/* ── Runs ───────────────────────────────────────────────────────────────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.table th,
+.table td {
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #141b31;
+  font-weight: 400;
+}
+
+.table thead th {
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6b78a3;
+  border-bottom-color: var(--line);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tr {
+  cursor: pointer;
+  transition: background-color 240ms var(--ease);
+}
+
+.tr:hover {
+  background: #0a1020;
+}
+
+.tr[data-open] {
+  background: #0d1428;
+}
+
+.rowButton {
+  font: inherit;
+  color: var(--accent);
+}
+
+.pill {
+  padding: 0.1rem 0.5rem;
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+
+.pill[data-outcome="accepted"] {
+  color: var(--ok);
+}
+
+.pill[data-outcome="escalated"] {
+  color: var(--warn);
+}
+
+.pill[data-outcome="rejected"] {
+  color: #ff7a7a;
+}
+
+.rowNote {
+  margin-top: 0.9rem;
+  font-size: 0.8125rem;
+  color: var(--dim);
+}
+
+/* ── Surface ────────────────────────────────────────────────────────────── */
+
+.surface {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+.connectors {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.connectors li {
+  padding: 0.65rem 0.9rem;
+  background: #070b16;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--dim);
+  transition: color 240ms var(--ease), background-color 240ms var(--ease);
+}
+
+.connectors li:hover {
+  color: var(--ink);
+  background: #0d1428;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem clamp(1rem, 3vw, 2.5rem) 4.5rem;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #55628d;
+}
+
+/* ── Narrow ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1080px) {
+  .console,
+  .surface {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chain,
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The rail becomes the application's top chrome — same information, laid out
+     for a thumb rather than a cursor. */
+  .rail {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+  }
+
+  .nav {
+    margin: 0;
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .navItem {
+    border-left: 0;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .railFoot {
+    margin-left: auto;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .status {
+    display: none;
+  }
+
+  .step {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    row-gap: 0.35rem;
+  }
+
+  .stepText {
+    grid-column: 1 / -1;
+  }
+
+  .conf {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .verdict {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .verdictMeta {
+    display: flex;
+    gap: 1.5rem;
+    text-align: left;
+  }
+
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .runs {
+    overflow-x: auto;
+  }
+
+  .table {
+    min-width: 40rem;
+  }
+}
+
+/* ── Reduced motion: the run arrives resolved, not frozen mid-phase ─────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .flow li {
+    animation: none;
+  }
+
+  .pipeline li[data-state="live"] .pipeDot::after {
+    animation: none;
+  }
+}
+
+/* In-page links land under the sticky command bar without this. */
+.thesis,
+.console,
+.agents,
+.signals,
+.runs,
+.surface {
+  scroll-margin-top: 3.75rem;
+}
+
+/* ══ THE RECORD ════════════════════════════════════════════════════════════
+   Nova's identity is not a typeface, it is a filing habit: everything on the
+   page is a numbered, referenced, grounded record, and the type system says so.
+   Sections carry §01…§06, the rail navigates by the same numbers, every panel
+   states its own reference, and no claim is printed without the record id it
+   came from. That is also the product's only real promise. */
+
+.railNum {
+  min-width: 1.9ch;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: #56628c;
+  font-variant-numeric: tabular-nums;
+  transition: color 200ms var(--ease);
+}
+
+.navItem[data-here] .railNum,
+.navItem:hover .railNum {
+  color: var(--accent);
+}
+
+.navItem[data-here] {
+  color: var(--ink);
+}
+
+/* ── The grounding ledger: three claims, three records, one floor ───────── */
+
+.ledger {
+  position: relative;
+  align-self: end;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgb(11 16 32 / 0.92), rgb(5 7 14 / 0.92));
+  backdrop-filter: blur(6px);
+}
+
+.ledgerHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+}
+
+.ledgerHead b {
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.ledgerRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.3rem 0.9rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.ledgerClaim {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.ledgerFrom {
+  grid-column: 1;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: #6b78a3;
+}
+
+.ledgerFrom i {
+  font-style: normal;
+  color: var(--dim);
+}
+
+/* A number set against the floor it has to clear: the policy made visible on
+   every single claim, rather than stated once in a paragraph. */
+.gauge {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  display: grid;
+  gap: 0.25rem;
+  justify-items: end;
+  width: 5.5rem;
+}
+
+.gaugeValue {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.gaugeTrack {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: #131a30;
+}
+
+.gaugeTrack span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--v) * 100%);
+  background: var(--accent);
+}
+
+/* The floor, marked in place. */
+.gaugeTrack::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 80%;
+  width: 1px;
+  background: var(--warn);
+}
+
+.gauge[data-under] .gaugeValue {
+  color: var(--warn);
+}
+
+.gauge[data-under] .gaugeTrack span {
+  background: var(--warn);
+}
+
+.ledgerFoot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6b78a3;
+}
+
+/* ── The command surface ────────────────────────────────────────────────── */
+
+.askForm {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  max-width: 34rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--line);
+  background: #080c18;
+  transition: border-color 200ms var(--ease);
+}
+
+.askForm:focus-within {
+  border-color: var(--accent);
+}
+
+.askInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+
+.askInput::placeholder {
+  color: #5a648c;
+}
+
+.askInput:focus-visible {
+  outline: none;
+}
+
+.askHint {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6b78a3;
+  white-space: nowrap;
+}
+
+.askHint[data-hit] {
+  color: var(--accent);
+}
+
+/* ── Richer run detail ──────────────────────────────────────────────────── */
+
+/* Each phase reports how long it took, so the spine is a measurement rather
+   than a progress ornament. */
+.pipeMs {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  color: #56628c;
+  font-variant-numeric: tabular-nums;
+}
+
+li[data-state="live"] .pipeMs {
+  color: var(--accent);
+}
+
+.stepFloor {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warn);
+}
+
+/* The rail's number and its label are one line with air between them. */
+.navItem {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8ch;
+}

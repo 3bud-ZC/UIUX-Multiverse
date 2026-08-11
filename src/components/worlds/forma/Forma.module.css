@@ -1,0 +1,918 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   06 — FORMA · architecture and research
+
+   A drawing sheet. The page carries a title block instead of a header, a
+   nine-column setting-out grid that stays visible, margin notes where a
+   publication would put them, and every figure captioned and numbered because
+   that is how the office issues work. Motion is 700ms quart in-out — a drawer
+   closing, not a transition effect.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.sheet {
+  --concrete: #c8c6bf;
+  --concrete2: #bcbab2;
+  --paper: #d5d3cc;
+  --ink: #191917;
+  --dim: #464641;
+  --rule: #9d9b93;
+  --blue: #2b4b8c;
+  --rust: #7a2f1d;
+
+  --display: var(--font-syne), system-ui, sans-serif;
+  --serif: var(--font-newsreader), Georgia, serif;
+  --mono: var(--font-spline-mono), ui-monospace, monospace;
+  --draw: 700ms cubic-bezier(0.83, 0, 0.17, 1);
+  --pad: clamp(1rem, 3.5vw, 3.5rem);
+
+  min-height: 100dvh;
+  background: var(--concrete);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.sheet :focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ── Title block ────────────────────────────────────────────────────────── */
+
+.titleBlock {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: clamp(1rem, 3vw, 3rem);
+  align-items: end;
+  padding: 0.9rem var(--pad);
+  border-bottom: 2px solid var(--ink);
+}
+
+.studio {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.discipline {
+  margin-top: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.tbMeta {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.tbMeta div {
+  border-left: 1px solid var(--rule);
+  padding-left: 0.6rem;
+}
+
+.tbMeta dt {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.tbMeta dd {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.tbNav {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tbNav a {
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--draw), color var(--draw);
+}
+
+.tbNav a:hover {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}
+
+/* ── Opening ────────────────────────────────────────────────────────────── */
+
+.opening {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  padding: clamp(2rem, 7vh, 5rem) var(--pad);
+  border-bottom: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+.field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.openingType {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  /* Syne 800 is a wide face: measured against the viewport the title runs into
+     the text column, so it is measured against its own column instead. */
+  container-type: inline-size;
+}
+
+.marginNote {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+  border-left: 2px solid var(--rust);
+  padding-left: 0.75rem;
+}
+
+.h1 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 15cqi, 6.5rem);
+  line-height: 0.82;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.openingText {
+  position: relative;
+  max-width: 46ch;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+/* ── Works index ────────────────────────────────────────────────────────── */
+
+.works {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(2rem, 6vh, 4rem) var(--pad);
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+
+.h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.25rem, 2.4vw, 1.9rem);
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.index {
+  width: 100%;
+  margin-top: 1.25rem;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.index th,
+.index td {
+  padding: 0.5rem 0.6rem 0.5rem 0;
+  text-align: left;
+  font-weight: 400;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: baseline;
+}
+
+.index thead th {
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border-bottom: 1px solid var(--ink);
+}
+
+.index tbody tr {
+  cursor: pointer;
+  transition: background-color var(--draw);
+}
+
+.index tbody tr:hover {
+  background: var(--concrete2);
+}
+
+.index tbody tr[data-on] {
+  background: var(--paper);
+  box-shadow: inset 3px 0 0 var(--blue);
+}
+
+.indexButton {
+  font: inherit;
+  color: var(--blue);
+}
+
+.indexName {
+  font-family: var(--serif);
+  font-size: 1rem;
+}
+
+/* ── Plate ──────────────────────────────────────────────────────────────── */
+
+.plate,
+.studyPlate {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  animation: draw var(--draw) both;
+}
+
+@keyframes draw {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+.drawing {
+  width: 100%;
+  height: auto;
+  color: var(--ink);
+  display: block;
+  border-bottom: 1px solid var(--rule);
+}
+
+.grid line {
+  stroke: var(--rule);
+  stroke-width: 0.5;
+}
+
+.solid {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.void {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-dasharray: 5 3;
+}
+
+.thick {
+  stroke: var(--ink);
+  stroke-width: 3;
+  fill: none;
+}
+
+.thin {
+  stroke: var(--ink);
+  stroke-width: 0.75;
+  fill: none;
+}
+
+.dim,
+.dimLine {
+  stroke: var(--rust);
+  stroke-width: 0.75;
+  fill: none;
+}
+
+.dimText,
+.label {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  fill: var(--rust);
+}
+
+.label {
+  fill: var(--dim);
+}
+
+.scaleBar rect {
+  fill: var(--ink);
+}
+
+.scaleAlt {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 0.5;
+}
+
+.plate figcaption,
+.studyPlate figcaption {
+  padding: 0.9rem 1rem 1rem;
+}
+
+.plateName {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.plateNote {
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  max-width: 48ch;
+}
+
+.plateMeta {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+
+.plateMeta div {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+}
+
+.plateMeta dt {
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.5625rem;
+  align-self: center;
+}
+
+/* ── Case study ─────────────────────────────────────────────────────────── */
+
+.study {
+  padding: clamp(2rem, 6vh, 4rem) var(--pad);
+  border-bottom: 1px solid var(--rule);
+}
+
+.studyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin-top: 1.5rem;
+  align-items: start;
+}
+
+.studyPlate figcaption {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.studyText {
+  display: grid;
+  gap: 1rem;
+  max-width: 56ch;
+}
+
+.materials {
+  grid-column: 1 / -1;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.materials caption {
+  text-align: left;
+  padding-bottom: 0.4rem;
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.materials th,
+.materials td {
+  padding: 0.45rem 0.75rem 0.45rem 0;
+  text-align: left;
+  font-weight: 400;
+  border-top: 1px solid var(--rule);
+}
+
+.qty {
+  color: var(--rust);
+  white-space: nowrap;
+}
+
+/* ── The office ─────────────────────────────────────────────────────────── */
+
+.office {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding: clamp(2rem, 6vh, 4rem) var(--pad);
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+
+.essay {
+  display: grid;
+  gap: 1rem;
+  max-width: 60ch;
+}
+
+.annotations {
+  display: grid;
+  gap: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1.8;
+  color: var(--dim);
+}
+
+.annotations p {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.annotations span {
+  color: var(--blue);
+  margin-right: 0.6ch;
+}
+
+.colophon {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.25rem var(--pad) 4.5rem;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── Narrow: the sheet folds to one column, the title block wraps ───────── */
+
+@media (max-width: 900px) {
+  .titleBlock {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .tbMeta {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .tbMeta div:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .opening,
+  .works,
+  .studyGrid,
+  .office {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .index {
+    font-size: 0.6875rem;
+  }
+
+  .index th:nth-child(3),
+  .index td:nth-child(3),
+  .index th:nth-child(5),
+  .index td:nth-child(5) {
+    display: none;
+  }
+
+  .plateMeta div {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+}
+
+/* ── The drawing set ────────────────────────────────────────────────────────
+   Four views of one building. The office's claim is that plan, section, axo
+   and mass are the same geometry seen from four positions, so the control that
+   switches them is set like a drawing-set index rather than like a tab bar. */
+
+.modes {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+  border: 1px solid var(--rule);
+}
+
+.mode {
+  padding: 0.4rem 0.9rem 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border-right: 1px solid var(--rule);
+  transition: background 700ms cubic-bezier(0.16, 0.84, 0.24, 1), color 700ms cubic-bezier(0.16, 0.84, 0.24, 1);
+}
+
+.mode:hover {
+  color: var(--ink);
+}
+
+.mode[data-on] {
+  background: var(--ink);
+  color: var(--concrete);
+}
+
+.modeNote {
+  padding: 0.4rem 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+}
+
+/* Each view is redrawn rather than cross-faded: a drawing does not dissolve
+   into another drawing, it is set down on the sheet. */
+.drawing {
+  animation: sheetIn 700ms cubic-bezier(0.16, 0.84, 0.24, 1) both;
+}
+
+@keyframes sheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+.ground {
+  stroke: var(--ink);
+  stroke-width: 2;
+  fill: none;
+}
+
+.earth {
+  color: var(--dim);
+  opacity: 0.5;
+}
+
+.figure {
+  fill: none;
+  stroke: var(--rust);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.figure circle {
+  fill: var(--rust);
+  stroke: none;
+}
+
+.sitePlane {
+  fill: color-mix(in srgb, var(--ink) 5%, transparent);
+  stroke: var(--rule);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.faceTop,
+.faceLeft,
+.faceRight {
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.axon .faceTop {
+  fill: color-mix(in srgb, var(--ink) 4%, transparent);
+}
+
+.axon .faceLeft {
+  fill: color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+.axon .faceRight {
+  fill: color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.massing .faceTop {
+  fill: color-mix(in srgb, var(--ink) 62%, var(--concrete));
+}
+
+.massing .faceLeft {
+  fill: color-mix(in srgb, var(--ink) 84%, var(--concrete));
+}
+
+.massing .faceRight {
+  fill: var(--ink);
+}
+
+.shadow {
+  fill: var(--ink);
+  opacity: 0.14;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawing {
+    animation: none;
+  }
+}
+
+/* ══ The headline, set out rather than scaled up ════════════════════════════
+   The old version was three words stacked at whatever size filled the column,
+   which at that scale turns Syne's flat terminals into slabs. This one is two
+   lines on the sheet's own grid: the second indented to the third column, both
+   sitting on a datum rule, tracking tightened as the size goes up the way a
+   drawn title block would be lettered. */
+
+.h1 {
+  display: grid;
+  font-size: clamp(1.9rem, 4.4vw, 3.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.h1a {
+  /* Optical alignment: Syne's S needs pulling left of the column edge to sit on
+     it, which a measured margin cannot know and an eye can. */
+  margin-inline-start: -0.045em;
+}
+
+.h1b {
+  margin-inline-start: 14%;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--ink) 58%, var(--paper));
+}
+
+.h1Rule {
+  height: 2px;
+  margin-top: 0.7rem;
+  background: var(--ink);
+  opacity: 0.85;
+}
+
+/* ══ The instruments ═══════════════════════════════════════════════════════
+   A drafting panel: labels in the drawing mono, values right-aligned and
+   tabular, and controls that look like they were fitted to the sheet rather
+   than dropped on it. */
+
+.instruments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1.4rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--rule);
+}
+
+.slider {
+  display: grid;
+  grid-template-columns: 5.2rem minmax(0, 1fr) 3.4rem;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.slider b {
+  font-weight: 400;
+  color: var(--ink);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider input[type="range"] {
+  width: 100%;
+  height: 2px;
+  appearance: none;
+  background: var(--rule);
+  cursor: ew-resize;
+}
+
+.slider input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 9px;
+  height: 16px;
+  background: var(--ink);
+}
+
+.slider input[type="range"]::-moz-range-thumb {
+  width: 9px;
+  height: 16px;
+  border: 0;
+  border-radius: 0;
+  background: var(--ink);
+}
+
+.slider input[type="range"]:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.slider input[type="range"]:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.isolate,
+.toggles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.isolate button,
+.toggle {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--rule);
+  font: inherit;
+  color: var(--dim);
+  background: transparent;
+  transition: color 200ms var(--draw), border-color 200ms var(--draw),
+    background-color 200ms var(--draw);
+}
+
+.isolate button:hover,
+.toggle:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.isolate button[data-on],
+.toggle[data-on] {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.instrumentNote {
+  grid-column: 1 / -1;
+  margin-top: 0.35rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+/* ══ The drawing itself ════════════════════════════════════════════════════
+   Line weights come from one variable so the heavy-line mode is a real drafting
+   convention rather than a filter. */
+
+.drawing {
+  --lw: 1;
+}
+
+.face {
+  fill: color-mix(in srgb, var(--ink) calc(var(--sh, 0.5) * 62%), var(--paper));
+  stroke: var(--ink);
+  stroke-width: calc(0.9px * var(--lw));
+  stroke-linejoin: round;
+}
+
+.voidFace {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: calc(1px * var(--lw));
+  stroke-dasharray: 5 4;
+}
+
+.roofCut {
+  color: var(--blue);
+  stroke: var(--blue);
+  stroke-width: calc(1.4px * var(--lw));
+}
+
+.vol[data-ghost] {
+  opacity: 0.16;
+}
+
+.vol[data-void] .face {
+  fill: none;
+}
+
+.structure {
+  fill: var(--rust);
+  stroke: var(--rust);
+  stroke-width: calc(1.1px * var(--lw));
+}
+
+.dimGroup {
+  color: var(--blue);
+}
+
+.sunMark {
+  fill: none;
+  stroke: var(--rust);
+  stroke-width: 1;
+}
+
+.sunMark circle {
+  stroke-dasharray: 3 3;
+}
+
+.sunMark text {
+  fill: var(--rust);
+  stroke: none;
+}
+
+@media (max-width: 900px) {
+  .instruments {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .h1b {
+    margin-inline-start: 8%;
+    white-space: normal;
+  }
+}
+
+/* ── The schedule of accommodation ──────────────────────────────────────────
+   Measured off the volumes rather than typed, so it can never disagree with the
+   drawing beside it. */
+
+.programme {
+  margin-top: clamp(1.5rem, 4vh, 2.5rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.programmeHead {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.schedule {
+  width: 100%;
+  margin-top: 0.7rem;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.schedule th,
+.schedule td {
+  padding: 0.35rem 0.5rem 0.35rem 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.schedule thead th {
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  font-weight: 400;
+}
+
+.schedule tbody th {
+  font-weight: 500;
+}
+
+.scheduleTotal th,
+.scheduleTotal td {
+  border-bottom: 0;
+  border-top: 2px solid var(--ink);
+  color: var(--ink);
+}
+
+.programmeNote {
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1.7;
+  color: var(--dim);
+}

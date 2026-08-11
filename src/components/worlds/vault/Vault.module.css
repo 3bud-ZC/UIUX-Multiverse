@@ -1,0 +1,1230 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   04 — VAULT · treasury operating system
+
+   An application, at working density. Three fixed columns — tree, workspace,
+   inspector — with a top bar and a status bar, so the page never scrolls as a
+   document; the panels scroll independently the way a workspace does. Type is
+   one family in two widths: mono for every figure and label, sans for the few
+   sentences. Motion is 160ms and only ever reports a state change.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.app {
+  --base: #0e1216;
+  --panel: #131920;
+  --panel2: #161d25;
+  --ink: #e4ebf2;
+  --dim: #8ea0b0;
+  --line: #243039;
+  --amber: #e8b44a;
+  --blue: #5c8fbf;
+  --up: #56c08b;
+  --down: #d9756a;
+
+  --mono: var(--font-plex-mono), ui-monospace, monospace;
+  --sans: var(--font-plex-sans), system-ui, sans-serif;
+  --fast: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100dvh;
+  background: var(--base);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+
+.app :focus-visible {
+  outline: 1px solid var(--amber);
+  outline-offset: -1px;
+}
+
+/* ── Top bar ────────────────────────────────────────────────────────────── */
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0.75rem;
+  height: 2.5rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5ch;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.brandMark {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--amber);
+}
+
+.entity {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 0.6875rem;
+  transition: border-color var(--fast), color var(--fast);
+}
+
+.entity:hover {
+  border-color: var(--dim);
+  color: var(--ink);
+}
+
+.search {
+  flex: 1;
+  max-width: 26rem;
+}
+
+.search input {
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  background: #0b0f13;
+  border: 1px solid var(--line);
+  font-size: 0.6875rem;
+  color: var(--ink);
+}
+
+.search input::placeholder {
+  color: #7d8d9b;
+}
+
+.topMeta {
+  margin-left: auto;
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.625rem;
+  color: var(--dim);
+}
+
+.topMeta span[data-live] {
+  color: var(--up);
+}
+
+/* ── Body: tree · workspace · inspector ─────────────────────────────────── */
+
+.body {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr) 17rem;
+  min-height: 0;
+}
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 0.75rem 0.5rem 4rem;
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+}
+
+.treeGroup {
+  display: grid;
+  gap: 1px;
+}
+
+.treeLabel {
+  padding: 0 0.4rem 0.3rem;
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7d8d9b;
+}
+
+.treeItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.28rem 0.4rem;
+  text-align: left;
+  font-size: 0.6875rem;
+  color: var(--dim);
+  border-left: 2px solid transparent;
+  transition: background-color var(--fast), color var(--fast), border-color var(--fast);
+}
+
+.treeItem:hover {
+  background: var(--panel);
+  color: var(--ink);
+}
+
+.treeItem[data-on] {
+  background: var(--panel2);
+  color: var(--ink);
+  border-left-color: var(--amber);
+}
+
+.treeMeta {
+  color: #7d8d9b;
+  font-size: 0.625rem;
+}
+
+.limit {
+  margin-top: auto;
+  padding: 0.5rem 0.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.limitLabel {
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7d8d9b;
+}
+
+.limitBar {
+  margin: 0.4rem 0 0.3rem;
+  height: 6px;
+  background: #0b0f13;
+  border: 1px solid var(--line);
+}
+
+.limitBar span {
+  display: block;
+  height: 100%;
+  background: var(--amber);
+}
+
+.limitValue {
+  font-size: 0.625rem;
+  color: var(--dim);
+}
+
+/* ── Workspace ──────────────────────────────────────────────────────────── */
+
+.work {
+  overflow-y: auto;
+  padding: 0.75rem 0.9rem 4rem;
+  min-width: 0;
+}
+
+.workHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.h1 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.crumb {
+  margin-top: 0.15rem;
+  font-size: 0.625rem;
+  color: var(--dim);
+}
+
+.tabs {
+  display: flex;
+  gap: 1px;
+}
+
+.tab {
+  padding: 0.28rem 0.7rem;
+  font-size: 0.6875rem;
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  transition: background-color var(--fast), color var(--fast);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--panel2);
+  color: var(--amber);
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0.75rem 0;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.kpis div {
+  padding: 0.5rem 0.6rem;
+  background: var(--panel);
+}
+
+.kpis dt {
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7d8d9b;
+}
+
+.kpis dd {
+  margin-top: 0.2rem;
+  font-size: 1.0625rem;
+  letter-spacing: -0.05em;
+}
+
+.kpis dd[data-flag] {
+  color: var(--amber);
+}
+
+.overview {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 0.75rem;
+}
+
+.panel,
+.wide {
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.wide {
+  grid-column: 1 / -1;
+  overflow-x: auto;
+}
+
+.panelHead,
+.panelHeadRow {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.panelHeadRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0;
+  border-bottom: 0;
+}
+
+.panelHeadRow .panelHead {
+  border-bottom: 0;
+}
+
+.sorter {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-right: 0.6rem;
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7d8d9b;
+}
+
+.sorter button {
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color var(--fast), border-color var(--fast), background-color var(--fast);
+}
+
+.sorter button[data-on] {
+  color: var(--base);
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+/* ── Tables ─────────────────────────────────────────────────────────────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.6875rem;
+}
+
+.table th,
+.table td {
+  padding: 0.3rem 0.6rem;
+  text-align: left;
+  font-weight: 400;
+  border-bottom: 1px solid #1b2531;
+  white-space: nowrap;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--panel2);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7d8d9b;
+}
+
+.num {
+  text-align: right;
+}
+
+.table td[data-up] {
+  color: var(--up);
+}
+
+.positions {
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.positions tbody tr {
+  cursor: pointer;
+  transition: background-color var(--fast);
+}
+
+.positions tbody tr:hover {
+  background: var(--panel2);
+}
+
+.positions tbody tr[data-on] {
+  background: #1b2735;
+  box-shadow: inset 2px 0 0 var(--amber);
+}
+
+.ref {
+  color: var(--blue);
+}
+
+.state {
+  padding: 0 0.35rem;
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  color: var(--dim);
+}
+
+.state[data-state="settled"] {
+  color: var(--up);
+}
+
+.state[data-state="pending"] {
+  color: var(--amber);
+}
+
+/* ── Tape ───────────────────────────────────────────────────────────────── */
+
+.tape {
+  height: 8rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.tapeCanvas {
+  width: 100%;
+  height: 100%;
+}
+
+.rates {
+  display: grid;
+  gap: 1px;
+}
+
+.rates li {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-bottom: 1px solid #1b2531;
+  font-size: 0.6875rem;
+}
+
+.rates li span {
+  width: 4rem;
+  color: var(--dim);
+}
+
+.rates li em {
+  margin-left: auto;
+  font-style: normal;
+  color: var(--down);
+}
+
+.rates li em[data-up] {
+  color: var(--up);
+}
+
+/* ── Ladder ─────────────────────────────────────────────────────────────── */
+
+.ladder {
+  display: grid;
+  gap: 1px;
+  padding: 0.6rem;
+}
+
+.ladderRow {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) 3rem;
+  gap: 0.75rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.2rem 0.3rem;
+  text-align: left;
+  transition: background-color var(--fast);
+}
+
+.ladderRow:hover {
+  background: #12181d;
+}
+
+.ladderRow[data-on] {
+  background: #171f26;
+  box-shadow: inset 2px 0 0 var(--amber);
+}
+
+.ladderRow:focus-visible {
+  outline: 1px solid var(--amber);
+  outline-offset: -1px;
+}
+
+.ladderLabel {
+  color: var(--dim);
+}
+
+.ladderBar {
+  height: 14px;
+  background: #0b0f13;
+  border: 1px solid var(--line);
+}
+
+.ladderBar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--amber));
+}
+
+.ladderValue {
+  text-align: right;
+}
+
+.ladderNote {
+  padding: 0.6rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--dim);
+  max-width: 70ch;
+}
+
+/* ── Activity ───────────────────────────────────────────────────────────── */
+
+.activity {
+  display: grid;
+}
+
+.activity li {
+  display: grid;
+  grid-template-columns: 4.5rem 5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid #1b2531;
+}
+
+.actAt {
+  color: #7d8d9b;
+}
+
+.actWho {
+  color: var(--blue);
+}
+
+.actWho[data-system] {
+  color: #7d8d9b;
+}
+
+.actWhat {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+
+/* ── Inspector ──────────────────────────────────────────────────────────── */
+
+.drawer {
+  border-left: 1px solid var(--line);
+  background: var(--panel);
+  overflow-y: auto;
+  padding-bottom: 4rem;
+}
+
+.drawerHead {
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.drawerRef {
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.drawerName {
+  margin-top: 0.15rem;
+  font-size: 0.875rem;
+  letter-spacing: -0.03em;
+}
+
+.detail {
+  display: grid;
+}
+
+.detail div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-bottom: 1px solid #1b2531;
+  font-size: 0.6875rem;
+}
+
+.detail dt {
+  color: #7d8d9b;
+}
+
+.drawerActions {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.6rem;
+}
+
+.primary,
+.secondary {
+  padding: 0.4rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background-color var(--fast), color var(--fast), border-color var(--fast);
+}
+
+.primary {
+  background: var(--amber);
+  color: #16120a;
+}
+
+.primary:hover {
+  background: #f2c86e;
+}
+
+.secondary {
+  border: 1px solid var(--line);
+  color: var(--dim);
+}
+
+.secondary:hover {
+  border-color: var(--dim);
+  color: var(--ink);
+}
+
+.drawerNote,
+.drawerEmpty {
+  padding: 0 0.6rem;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.drawerEmpty {
+  padding-top: 0.75rem;
+}
+
+/* ── Status bar ─────────────────────────────────────────────────────────── */
+
+.status {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 0 0.75rem;
+  height: 1.75rem;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7d8d9b;
+}
+
+.status span:last-child {
+  margin-left: auto;
+}
+
+/* ── Narrow: the inspector becomes a sheet under the workspace ──────────── */
+
+@media (max-width: 1180px) {
+  .body {
+    grid-template-columns: 11rem minmax(0, 1fr);
+  }
+
+  .drawer {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 780px) {
+  .app {
+    height: auto;
+    min-height: 100dvh;
+  }
+
+  .top {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 0.5rem 0.6rem;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .search {
+    order: 3;
+    max-width: none;
+    flex-basis: 100%;
+  }
+
+  .topMeta {
+    font-size: 0.5625rem;
+    gap: 0.75rem;
+  }
+
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The tree stops being a tree on a phone: it becomes a scrollable row of
+     scopes, which is what a thumb can actually use. */
+  .tree {
+    flex-direction: row;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+  }
+
+  .treeGroup {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .treeLabel {
+    align-self: center;
+    padding: 0;
+    white-space: nowrap;
+  }
+
+  .treeItem {
+    border-left: 0;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .treeItem[data-on] {
+    border-bottom-color: var(--amber);
+  }
+
+  .treeMeta {
+    display: none;
+  }
+
+  .limit {
+    display: none;
+  }
+
+  .work {
+    overflow: visible;
+  }
+
+  /* Tables stay tabular on a phone rather than reflowing into cards — a
+     treasury figure only means something next to the figures around it. Each
+     panel scrolls sideways on its own. */
+  .panel {
+    overflow-x: auto;
+  }
+
+  .workHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .tabs {
+    width: 100%;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .drawer {
+    overflow: visible;
+  }
+
+  .status {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    padding: 0.4rem 0.6rem 3.5rem;
+  }
+
+  .status span:last-child {
+    margin-left: 0;
+  }
+}
+
+/* ── Scenario ───────────────────────────────────────────────────────────────
+   The one thing a treasury system is for. Levers on the left, the consequence
+   on the right, and the rest of the overview re-derived from the same object —
+   the shifted rows below are not a separate animation, they are the same state
+   arriving in another panel. */
+
+.sim {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.levers {
+  display: grid;
+  align-content: start;
+  border-right: 1px solid var(--line);
+}
+
+.lever {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  column-gap: 0.6rem;
+  row-gap: 0.1rem;
+  padding: 0.55rem 0.75rem 0.65rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  transition: background var(--fast);
+}
+
+.lever:hover {
+  background: var(--panel2);
+}
+
+.leverBox {
+  grid-row: 1 / 3;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin-top: 0.2rem;
+  border: 1px solid var(--dim);
+  transition: background var(--fast), border-color var(--fast);
+}
+
+.lever[data-on] .leverBox {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.leverLabel {
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+
+.lever[data-on] .leverLabel {
+  color: var(--amber);
+}
+
+.leverNote {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: var(--dim);
+}
+
+.reset {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  transition: color var(--fast);
+}
+
+.reset:hover:not(:disabled) {
+  color: var(--ink);
+}
+
+.reset:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.simOut {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+}
+
+.simOut > div {
+  padding: 0.5rem 0.75rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+.simOut dt {
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.simOut dd {
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--fast);
+}
+
+.simOut dd[data-down] {
+  color: var(--down);
+}
+
+.simBig {
+  font-size: 1.125rem !important;
+  color: var(--amber);
+}
+
+/* Runway, against the floor it must not cross. */
+.runway {
+  position: relative;
+  grid-column: 2;
+  height: 0.75rem;
+  margin: 0.75rem;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+}
+
+.runwayFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--up);
+  transition: width 320ms cubic-bezier(0.4, 0, 0.2, 1), background var(--fast);
+}
+
+.runwayFill[data-low] {
+  background: var(--down);
+}
+
+.runwayFloor {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--amber);
+}
+
+.simNote {
+  grid-column: 1 / -1;
+  padding: 0.6rem 0.75rem 0.75rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+/* Any figure the scenario moved is marked, so a changed number is never
+   mistaken for the actual one. */
+.table tr[data-shift] td,
+.simOut dd[data-shift] {
+  color: var(--amber);
+}
+
+.table tr[data-shift] {
+  background: color-mix(in srgb, var(--amber) 7%, transparent);
+}
+
+.kpis dd[data-shift] {
+  color: var(--amber);
+}
+
+.state[data-state="failed"] {
+  color: var(--down);
+  border-color: var(--down);
+}
+
+@media (max-width: 900px) {
+  .sim {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .levers {
+    border-right: 0;
+  }
+
+  .runway {
+    grid-column: 1;
+  }
+}
+
+/* ══ Controls that carry state ═════════════════════════════════════════════
+   Everything below exists because the corresponding control now does something:
+   the entity switcher opens, the tabs advertise their shortcut, the inspector
+   reports what kind of thing it is inspecting, and a ladder bucket lists its
+   members. */
+
+.entityWrap {
+  position: relative;
+}
+
+.entityMenu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 20rem;
+  border: 1px solid var(--line);
+  background: #0f1519;
+  box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.9);
+}
+
+.entityItem {
+  display: grid;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--ink);
+  transition: background-color var(--fast);
+}
+
+.entityItem:hover {
+  background: #161e24;
+}
+
+.entityItem[data-on] {
+  background: #1a2530;
+  box-shadow: inset 2px 0 0 var(--amber);
+}
+
+.entityNote {
+  font-size: 0.625rem;
+  color: var(--dim);
+}
+
+/* The shortcut is printed on the tab, because a desk user learns it once. */
+.tabKey {
+  margin-left: 0.5ch;
+  font-size: 0.5625rem;
+  color: var(--dim);
+  opacity: 0.7;
+}
+
+.tab[aria-selected="true"] .tabKey {
+  color: inherit;
+  opacity: 0.55;
+}
+
+.topMeta span[data-count] {
+  color: var(--amber);
+}
+
+.drawerKind {
+  margin-left: 0.6ch;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+.drawerIban {
+  padding: 0 0.75rem 0.6rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+}
+
+.bucketList {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.bucketList > li {
+  border-bottom: 1px solid var(--line);
+}
+
+.bucketList button {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr) 3rem;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  text-align: left;
+  font-size: 0.6875rem;
+  color: var(--ink);
+  transition: background-color var(--fast);
+}
+
+.bucketList button:hover {
+  background: #161e24;
+}
+
+/* A policy test that can fail has to look like it failed. */
+.ladderNote[data-breach] {
+  color: #ff8f6b;
+  box-shadow: inset 2px 0 0 #ff8f6b;
+}
+
+/* Rows that inspect something are pointers, and they say so. */
+.table tbody tr[data-on] {
+  background: #171f26;
+  box-shadow: inset 2px 0 0 var(--amber);
+}
+
+.table tbody tr:hover {
+  background: #12181d;
+}
+
+/* The escape control owns the bottom-left corner of every world, so the status
+   bar starts after it rather than underneath it. */
+.status {
+  padding-left: 11.5rem;
+}
+
+@media (max-width: 900px) {
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .status {
+    padding-left: 0;
+    padding-bottom: 2.6rem;
+  }
+}
+
+/* ── Ladder view: a chart is not a view ─────────────────────────────────── */
+
+.ladderGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.rollList {
+  display: grid;
+}
+
+.rollList > li {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.4rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.6875rem;
+}
+
+.rollDate {
+  color: var(--dim);
+}
+
+.rollAmount {
+  font-variant-numeric: tabular-nums;
+}
+
+.concList {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.7rem;
+}
+
+.concList > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4.5rem;
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 0.6875rem;
+}
+
+.concBar {
+  grid-column: 1 / -1;
+  height: 6px;
+  background: #0b0f13;
+  border: 1px solid var(--line);
+}
+
+.concBar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--amber));
+}
+
+.concList > li[data-over] .concBar i {
+  background: #ff8f6b;
+}
+
+@media (max-width: 1180px) {
+  .ladderGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ladderSide {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+/* At 360 the four view tabs plus their printed shortcuts are wider than the
+   viewport, which is a page-level overflow rather than a crowded strip. The
+   shortcut is a desk affordance and there is no keyboard on a phone, so it goes
+   first, and the strip is allowed to scroll on its own after that. */
+@media (max-width: 520px) {
+  .tabKey {
+    display: none;
+  }
+
+  .tabs {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .workHead {
+    min-width: 0;
+  }
+}
