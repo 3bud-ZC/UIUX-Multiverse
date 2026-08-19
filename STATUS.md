@@ -2,8 +2,9 @@
 
 Single source of truth for project progress. Updated after every meaningful change.
 
-**Last updated:** 2026-08-11
-**Overall completion:** ~93% of the ten-world vision · Milestone 04 complete
+**Last updated:** 2026-08-19
+**Overall completion:** ~93% of the ten-world vision · Milestone 04 complete ·
+Milestone 05 (static deployment) complete in the repository
 
 ---
 
@@ -434,12 +435,87 @@ cover system plus the sequencer.
 
 ## Deployment
 
+**Milestone 05 — moved off the VPS onto a free static host. Repository side
+complete; the Cloudflare account side is not yet done.**
+
+The site is ten static websites and a lobby. Nothing was ever computed at
+request time, so the Node server, the reverse proxy and the process manager were
+paying rent for nothing. The build now emits plain files and the edge serves
+them.
+
+### Architecture
+
+```
+GitHub → GitHub Actions → Next.js static export → Cloudflare Pages → uiux.abud.fun
+```
+
+No VPS, no Nginx, no PM2, no database, no SSH, no server IP.
+
 - **Production URL**: https://uiux.abud.fun
-- **GitHub Commit SHA**: b0915d63810011828821224c48fba94b4df39f36
-- **VPS IP**: 167.99.157.6
-- **Deployment Path**: /var/www/uiux-multiverse/releases/20260811061908 (symlinked to /var/www/uiux-multiverse/current)
-- **PM2**: App name \uiux-multiverse\ running NextJS node server on port 3077
-- **Nginx Config Path**: /etc/nginx/sites-available/uiux.abud.fun.conf (symlinked to sites-enabled)
-- **HTTPS Status**: SSL enabled with Certbot/Let's Encrypt
-- **Health-check**: Success. App serving requests securely.
-- **Rollback Command**: ssh root@167.99.157.6 'ln -sfn /var/www/uiux-multiverse/releases/<PREVIOUS_TIMESTAMP> /var/www/uiux-multiverse/current && cd /var/www/uiux-multiverse/current && pm2 restart uiux-multiverse'
+- **Cloudflare Pages project**: `abud-uiux` (production branch `main`)
+- **Root domain**: abud.fun — the site is the `uiux` subdomain of it
+- **Build command**: `npm run build` (`output: "export"` in `next.config.ts`)
+- **Publish directory**: `out/`
+- **Workflow**: `.github/workflows/deploy.yml` — installs, lints, typechecks,
+  builds, asserts the eleven routes exist, then publishes. Pull requests run
+  everything except the publish step.
+- **Deploy command** (what the workflow runs, and what works by hand):
+  `npx wrangler pages deploy out --project-name=abud-uiux --branch=main`
+- **Rollback**: Cloudflare Pages keeps every deployment. Roll back from the
+  project's Deployments list, or re-run the workflow on an earlier commit.
+- **HTTPS**: issued by Cloudflare when the custom domain is attached.
+
+### Repository scan, and what static export required
+
+Audited `package.json`, `next.config.ts`, every route under `src/app/`, all ten
+world components, `src/lib/`, and the deployment files at the root. Nothing in
+the codebase blocked the export: no `next/image`, no route handlers, no
+`headers()` / `cookies()`, no middleware, no `generateStaticParams`, no dynamic
+segments, no `basePath` or `assetPrefix`. Every route is a leaf page; the twenty
+eight `next/font/google` families are downloaded at build time and self-hosted,
+which the export carries as 154 woff2 files under `_next/static/media`.
+
+Two files did need the export opt-in: `sitemap.ts` and `robots.ts` are route
+handlers, so each declares `export const dynamic = "force-static"`.
+
+### Verification
+
+`npm run lint`, `npm run typecheck` and `npm run build` all pass. The export was
+then served through a harness replicating Cloudflare Pages' asset resolution
+(`/worlds/nova` → `worlds/nova.html`, misses → `404.html`) and driven over CDP:
+
+- All eleven routes return 200 by direct URL, which is also what a refresh is.
+  An unknown path returns the exported 404. No client-side router is involved,
+  so deep links and refreshes behave identically to first load.
+- Every asset referenced by a world route resolves — CSS, chunks, fonts, icon.
+- No console errors and no horizontal overflow on any route, at 1440, 1024, 390
+  and 360.
+- Each world still paints its own ground on the document element, and the lobby
+  still clears it — the shared-shell leak has not returned.
+- Reduced motion still produces a complete still composition rather than a
+  frozen one; ⌘K, the switcher's arrow keys and the escape control all work.
+
+Nothing was redesigned. No world, animation, interaction or responsive
+behaviour was changed or removed.
+
+### Retired with the VPS
+
+`deploy.sh`, `uiux.abud.fun.conf` and the stale `release.tar` build artifact were
+removed — they described a host that no longer exists. Git history keeps them.
+`*.tar` is now ignored.
+
+### Remaining — needs the Cloudflare account
+
+No Cloudflare credentials are present on this machine (no Wrangler, no
+`CLOUDFLARE_API_TOKEN`, no repository secrets), so the deploy itself could not be
+run from here. What is left:
+
+1. Create the Pages project `abud-uiux` (direct upload / Wrangler, not a Pages
+   Git connection — Actions does the building).
+2. Add repository secrets `CLOUDFLARE_API_TOKEN` (Cloudflare Pages — Edit) and
+   `CLOUDFLARE_ACCOUNT_ID`.
+3. Re-run the workflow, then attach the custom domain `uiux.abud.fun` to the
+   project. Cloudflare adds the CNAME itself; no other DNS record is touched.
+
+Until step 2 the workflow builds and verifies on every push and skips only the
+publish step.

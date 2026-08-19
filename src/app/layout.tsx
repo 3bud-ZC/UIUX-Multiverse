@@ -3,6 +3,9 @@ import { fontClassNames } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  // Production origin. Everything relative in this file — and in the ten world
+  // routes that inherit from it — resolves against this.
+  metadataBase: new URL("https://uiux.abud.fun"),
   title: "ABUD — UI/UX Multiverse",
   description:
     "Ten independent design worlds by ABUD: AI software, luxury, music, fintech, games, architecture, mobile, marketing, product and commerce. Choose one and enter it.",
@@ -12,6 +15,8 @@ export const metadata: Metadata = {
     title: "ABUD — UI/UX Multiverse",
     description: "Ten design worlds. One hand. Pick the one that looks like your problem.",
     type: "website",
+    url: "https://uiux.abud.fun",
+    siteName: "ABUD — UI/UX Multiverse",
   },
 };
 

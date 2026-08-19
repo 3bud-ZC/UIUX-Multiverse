@@ -1,0 +1,63 @@
+name: Build and deploy
+
+# GitHub → Actions → Next.js static export → Cloudflare Pages → uiux.abud.fun
+#
+# Pull requests build and are checked but are not published. Pushes to `main`
+# publish the export to the production branch of the Pages project.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # `output: "export"` in next.config.ts — this writes out/.
+      - name: Build static export
+        run: npm run build
+
+      - name: Verify export
+        run: |
+          test -f out/index.html
+          test -f out/404.html
+          for world in nova atelier pulse vault orbit forma luma signal object mercato; do
+            test -f "out/worlds/$world.html" || { echo "missing world: $world"; exit 1; }
+          done
+          echo "11 routes exported."
+
+      - name: Deploy to Cloudflare Pages
+        if: github.event_name != 'pull_request'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=abud-uiux --branch=main

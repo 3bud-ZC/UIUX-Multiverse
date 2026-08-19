@@ -1,0 +1,10 @@
+# Cloudflare Pages header rules. Next copies `public/` into `out/` verbatim.
+
+# Build output under /_next/static is content-hashed, so it can never go stale.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts are self-hosted by next/font under the same hashed path; the media
+# directory holds their woff2 files.
+/_next/static/media/*
+  Cache-Control: public, max-age=31536000, immutable
