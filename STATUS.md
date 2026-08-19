@@ -464,6 +464,8 @@ No VPS, no Nginx, no PM2, no database, no SSH, no server IP.
 - **Rollback**: Cloudflare Pages keeps every deployment. Roll back from the
   project's Deployments list, or re-run the workflow on an earlier commit.
 - **HTTPS**: issued by Cloudflare when the custom domain is attached.
+- **Introduced by**: `71a1a20`, with `f665d4c` (lockfile) and `1e89f5d` (CI
+  guard) on top.
 
 ### Repository scan, and what static export required
 
@@ -477,6 +479,11 @@ which the export carries as 154 woff2 files under `_next/static/media`.
 
 Two files did need the export opt-in: `sitemap.ts` and `robots.ts` are route
 handlers, so each declares `export const dynamic = "force-static"`.
+
+One genuine defect surfaced: `package-lock.json` was out of step with the
+installed tree and failed `npm ci` on both Windows and Linux, which would have
+broken every CI run. It was regenerated from a clean resolution and verified on
+a Linux runner before landing on `main`.
 
 ### Verification
 
@@ -518,4 +525,8 @@ run from here. What is left:
    project. Cloudflare adds the CNAME itself; no other DNS record is touched.
 
 Until step 2 the workflow builds and verifies on every push and skips only the
-publish step.
+publish step — confirmed green on a Linux runner, with the skip reported as a
+notice rather than a failure.
+
+The old VPS deployment is presumed gone; `uiux.abud.fun` will not serve the new
+build until the Pages project exists and the domain is attached.
